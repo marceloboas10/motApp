@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "259757448182",
+    "project_id": "motapp-43a31",
+    "storage_bucket": "motapp-43a31.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259757448182:android:a00edabe8437149d0bc5d7",
+        "android_client_info": {
+          "package_name": "br.com.vilasboas.motapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZTC0fTNGkRFKtneAEVRbQeyZ5Ngpt2VU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
