@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(padding: EdgeInsetsGeometry.only(top: 70)),
                       TextFieldLoginWidget(
                         controller: textEmail,
-                        labelText: 'Usuário',
+                        labelText: 'E-mail',
                         icon: Icons.person_2_rounded,
                       ),
                       SizedBox(height: 26),

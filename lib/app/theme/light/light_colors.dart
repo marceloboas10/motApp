@@ -6,4 +6,5 @@ class LightColors {
   static const buttonRed = Color(0xFFEF4444);
   static const gray = Color(0XFFA8A8A8);
   static const lightGray = Color(0xFFDBDBDB);
+  static const show = Color(0xFFFFFAFE);
 }
