@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 class CreateUserViewModel extends ChangeNotifier {
   bool isLoading = false;
 
-  Future<String?> createAccount(
-    String name,
-    String email,
-    String password,
-  ) async {
+  Future createAccount(String name, String email, String password) async {
     isLoading = true;
     notifyListeners();
 
@@ -27,7 +23,7 @@ class CreateUserViewModel extends ChangeNotifier {
       notifyListeners();
       return null;
     } on FirebaseAuthException catch (error) {
-      
+      return error;
     }
   }
 }

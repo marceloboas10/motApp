@@ -20,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ChangeNotifierProvider(
       create: (_) => LoginViewModel(),
       child: Consumer<LoginViewModel>(
@@ -27,93 +29,105 @@ class _LoginPageState extends State<LoginPage> {
           return SafeArea(
             child: Scaffold(
               backgroundColor: LightColors.backgaundLogin,
-              body: Padding(
-                padding: EdgeInsetsGeometry.all(16),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('images/logo.png', height: 100),
-                      Padding(padding: EdgeInsetsGeometry.only(top: 70)),
-                      TextFieldLoginWidget(
-                        controller: textEmail,
-                        labelText: 'E-mail',
-                        icon: Icons.person_2_rounded,
-                      ),
-                      SizedBox(height: 26),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 50),
-                        child: TextFieldLoginWidget(
-                          obscureText: true,
-                          controller: textPassword,
-                          labelText: 'Senha',
-                          icon: Icons.lock_sharp,
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsetsGeometry.all(16),
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('images/logo.png', height: 100),
+                        Padding(padding: EdgeInsetsGeometry.only(top: 70)),
+                        Text(
+                          'Acesse sua conta',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 16),
+                        TextFieldLoginWidget(
+                          controller: textEmail,
+                          labelText: 'E-mail',
+                          icon: Icons.person_2_rounded,
+                        ),
+                        SizedBox(height: 26),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 50),
+                          child: TextFieldLoginWidget(
+                            obscureText: true,
+                            controller: textPassword,
+                            labelText: 'Senha',
+                            icon: Icons.lock_sharp,
+                          ),
+                        ),
 
-                      ElevatedButton(
-                        onPressed: viewModel.isLoading
-                            ? null
-                            : () async {
-                                final result = await viewModel.login(
-                                  textEmail.text,
-                                  textPassword.text,
-                                );
-                                if (result != null &&
-                                    !result.startsWith('ERRO')) {
-                                  if (context.mounted) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HomePage(),
-                                      ),
-                                    );
+                        ElevatedButton(
+                          onPressed: viewModel.isLoading
+                              ? null
+                              : () async {
+                                  final result = await viewModel.login(
+                                    textEmail.text,
+                                    textPassword.text,
+                                  );
+                                  if (result != null &&
+                                      !result.startsWith('ERRO')) {
+                                    if (context.mounted) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomePage(),
+                                        ),
+                                      );
+                                    }
+                                  } else if (result != null) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(result),
+                                          duration: Duration(seconds: 4),
+                                        ),
+                                      );
+                                    }
                                   }
-                                } else if (result != null) {
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(result),
-                                        duration: Duration(seconds: 4),
-                                      ),
-                                    );
-                                  }
-                                }
-                              },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            LightColors.buttonRed,
-                          ),
-                        ),
-                        child: Text(
-                          "Entrar",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            LightColors.buttonRed,
-                          ),
-                        ),
-                        child: viewModel.isLoading
-                            ? CircularProgressIndicator(color: Colors.white)
-                            : Text(
-                                "Criar Conta",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateAccountPage(),
+                                },
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                              LightColors.buttonRed,
                             ),
-                          );
-                        },
-                      ),
-                    ],
+                          ),
+                          child: Text(
+                            "Entrar",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                              LightColors.buttonRed,
+                            ),
+                          ),
+                          child: viewModel.isLoading
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "Criar Conta",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateAccountPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
