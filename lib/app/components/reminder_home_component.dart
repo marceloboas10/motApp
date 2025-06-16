@@ -8,7 +8,8 @@ class ReminderHomeComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => SizedBox(height: 4),
         itemCount: 14,
         itemBuilder: (context, index) => ReminderWidget(),
       ),

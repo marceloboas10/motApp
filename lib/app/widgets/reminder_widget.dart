@@ -14,6 +14,7 @@ class _ReminderHomeState extends State<ReminderWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2,
       color: Colors.white,
       child: ListTile(
         leading: Icon(Icons.offline_bolt_rounded, color: LightColors.buttonRed),
