@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:motapp/app/pages/customers_pages.dart';
 import 'package:motapp/app/pages/create_account_page.dart';
 import 'package:motapp/app/pages/menu_home_page.dart';
+import 'package:motapp/app/pages/vehicles_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,12 +17,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [MenuHomePage(), CreateAccountPage()];
+    final List<Widget> pages = [MenuHomePage(), CustomersPages(), VehiclesPage()];
 
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
+          showUnselectedLabels: true,
           selectedItemColor: LightColors.iconColorGreen,
+          unselectedItemColor: LightColors.gray,
           selectedIconTheme: IconThemeData(color: LightColors.iconColorGreen),
           unselectedIconTheme: IconThemeData(color: LightColors.gray),
           items: const [
