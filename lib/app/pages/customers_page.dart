@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:motapp/app/components/show_customers_compoment.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class CustomersPages extends StatefulWidget {
-  const CustomersPages({super.key});
+class CustomersPage extends StatefulWidget {
+  const CustomersPage({super.key});
 
   @override
-  State<CustomersPages> createState() => _CustomersPagesState();
+  State<CustomersPage> createState() => _CustomersPageState();
 }
 
-class _CustomersPagesState extends State<CustomersPages> {
+class _CustomersPageState extends State<CustomersPage> {
   late CollectionReference customers;
 
   @override
@@ -24,6 +24,7 @@ class _CustomersPagesState extends State<CustomersPages> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Clientes'),
+        centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 8),
         actions: [
           IconButton(
@@ -48,8 +49,10 @@ class _CustomersPagesState extends State<CustomersPages> {
               return Center(child: CircularProgressIndicator());
             default:
               final dados = snapshot.requireData;
-              return ListView.builder(itemCount: dados.size,
-                itemBuilder: (context, index) => ShowCustomersCompoment(snapshot: dados.docs[index],),
+              return ListView.builder(
+                itemCount: dados.size,
+                itemBuilder: (context, index) =>
+                    ShowCustomersCompoment(snapshot: dados.docs[index]),
               );
           }
         },

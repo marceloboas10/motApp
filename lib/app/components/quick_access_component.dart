@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/pages/customers_pages.dart';
+import 'package:motapp/app/pages/customers_page.dart';
 import 'package:motapp/app/pages/vehicles_page.dart';
 import 'package:motapp/app/widgets/quick_access_card_widget.dart';
 
@@ -15,7 +15,7 @@ class QuickAccessComponent extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => CustomersPages(),
+                builder: (BuildContext context) => CustomersPage(),
               ),
             );
           },

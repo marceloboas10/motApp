@@ -17,6 +17,7 @@ class _ShowCustomersCompomentState extends State<ShowCustomersCompoment> {
       widget.snapshot.data(),
       widget.snapshot.id,
     );
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
@@ -32,9 +33,15 @@ class _ShowCustomersCompomentState extends State<ShowCustomersCompoment> {
                     'https://media.licdn.com/dms/image/v2/C4D03AQHW9KH-hxDGfQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1663117292082?e=1755734400&v=beta&t=cbHpnAIAp93tCWaawOjkOQmPU__Ici-yi6_jyjVsSJw',
                   ),
                 ),
-                title: Text(customer.nome),
-                subtitle: Text(customer.telefone),
-                trailing: Icon(Icons.edit),
+                title: Text(
+                  customer.nome,
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                subtitle: Text(
+                  customer.telefone,
+                  style: TextStyle(fontWeight: FontWeight.w400),
+                ),
+                trailing: Icon(Icons.edit_outlined),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
