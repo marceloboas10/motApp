@@ -1,4 +1,4 @@
-class CustomersModel {
+class CustomerModel {
   late String id;
   late String nome;
   late String rg;
@@ -7,14 +7,14 @@ class CustomersModel {
   late String validadeCnh;
   late String cep;
   late String endereco;
-  late String numeroResidencia;
+  late String numeroResidencial;
   late String complemento;
   late String bairro;
   late String cidade;
   late String? motoAlugada;
   late bool? pagamentoPendente;
 
-  CustomersModel(
+  CustomerModel(
     this.id,
     this.nome,
     this.rg,
@@ -23,7 +23,7 @@ class CustomersModel {
     this.validadeCnh,
     this.cep,
     this.endereco,
-    this.numeroResidencia,
+    this.numeroResidencial,
     this.complemento,
     this.bairro,
     this.cidade,
@@ -31,7 +31,7 @@ class CustomersModel {
     this.pagamentoPendente,
   );
 
-  CustomersModel.fromJson(Map<String, dynamic> map, String id) {
+  CustomerModel.fromJson(Map<String, dynamic> map, String id) {
     id = id;
     nome = map['Nome'];
     rg = map['RG'];
@@ -40,11 +40,11 @@ class CustomersModel {
     validadeCnh = map['Validade_CNH'];
     cep = map['CEP'];
     endereco = map['Endereco'];
-    numeroResidencia = map['Numero_Residencia'];
+    numeroResidencial = map['Numero_Residencial'];
     complemento = map['Complemento'];
     bairro = map['Bairro'];
     cidade = map['Cidade'];
-    motoAlugada = map['Moto_alugada'];
+    motoAlugada = map['Moto_Alugada'];
     pagamentoPendente = map['Pagamento_Pendente'];
   }
 
@@ -58,7 +58,7 @@ class CustomersModel {
       'validade_cnh': validadeCnh,
       'cep': cep,
       'endereco': endereco,
-      'numero_residencia': numeroResidencia,
+      'numero_residencial': numeroResidencial,
       'complemento': complemento,
       'bairro': bairro,
       'cidade': cidade,

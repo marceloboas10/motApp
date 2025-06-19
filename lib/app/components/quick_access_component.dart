@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/pages/customers_pages.dart';
+import 'package:motapp/app/pages/vehicles_page.dart';
 import 'package:motapp/app/widgets/quick_access_card_widget.dart';
 
 class QuickAccessComponent extends StatelessWidget {
@@ -22,7 +23,14 @@ class QuickAccessComponent extends StatelessWidget {
           icon: Icons.person_add_alt_1_rounded,
         ),
         QuickAccessCardWidget(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => VehiclesPage(),
+              ),
+            );
+          },
           title: 'Veículos',
           icon: Icons.two_wheeler_sharp,
         ),
