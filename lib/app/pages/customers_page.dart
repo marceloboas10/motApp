@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:motapp/app/components/show_customers_compoment.dart';
+import 'package:motapp/app/components/show_customer_compoment.dart';
+import 'package:motapp/app/pages/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class CustomersPage extends StatefulWidget {
@@ -28,7 +29,14 @@ class _CustomersPageState extends State<CustomersPage> {
         actionsPadding: EdgeInsets.only(right: 8),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => RegisterCustomerPage(),
+                ),
+              );
+            },
             icon: Icon(
               Icons.add_circle,
               size: 40,
@@ -52,7 +60,7 @@ class _CustomersPageState extends State<CustomersPage> {
               return ListView.builder(
                 itemCount: dados.size,
                 itemBuilder: (context, index) =>
-                    ShowCustomersCompoment(snapshot: dados.docs[index]),
+                    ShowCustomerCompoment(snapshot: dados.docs[index]),
               );
           }
         },

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:motapp/app/components/show_vehicles_component.dart';
+import 'package:motapp/app/components/show_vehicle_component.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class VehiclesPage extends StatefulWidget {
@@ -52,7 +52,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
               return ListView.builder(
                 itemCount: dados.size,
                 itemBuilder: (context, index) =>
-                    ShowVehiclesComponent(snapshot: dados.docs[index]),
+                    ShowVehicleComponent(snapshot: dados.docs[index]),
               );
           }
         },

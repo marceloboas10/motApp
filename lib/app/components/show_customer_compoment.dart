@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/customer_model.dart';
+import 'package:motapp/app/pages/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class ShowCustomersCompoment extends StatefulWidget {
-  const ShowCustomersCompoment({super.key, required this.snapshot});
+class ShowCustomerCompoment extends StatefulWidget {
+  const ShowCustomerCompoment({super.key, required this.snapshot});
   final dynamic snapshot;
 
   @override
-  State<ShowCustomersCompoment> createState() => _ShowCustomersCompomentState();
+  State<ShowCustomerCompoment> createState() => _ShowCustomerCompomentState();
 }
 
-class _ShowCustomersCompomentState extends State<ShowCustomersCompoment> {
+class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
   @override
   Widget build(BuildContext context) {
     CustomerModel customer = CustomerModel.fromJson(
@@ -38,23 +39,35 @@ class _ShowCustomersCompomentState extends State<ShowCustomersCompoment> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
-                  customer.telefone,
+                  customer.celular,
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                trailing: Icon(Icons.edit_outlined),
+                trailing: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => RegisterCustomerPage(),
+                      settings: RouteSettings(arguments: customer.id),
+                    ),
+                  ),
+                  child: Icon(Icons.edit_outlined),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFccfbf1),
-                        borderRadius: BorderRadius.circular(16),
+                    Visibility(
+                      visible: customer.motoAlugada!.length > 2,
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, right: 24),
+                        padding: EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFccfbf1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(customer.motoAlugada.toString()),
                       ),
-                      child: Text(customer.motoAlugada.toString()),
                     ),
                     Container(
                       padding: EdgeInsets.all(6),

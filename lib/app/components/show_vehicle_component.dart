@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/vehicle_model.dart';
 
-class ShowVehiclesComponent extends StatefulWidget {
-  const ShowVehiclesComponent({super.key, required this.snapshot});
+class ShowVehicleComponent extends StatefulWidget {
+  const ShowVehicleComponent({super.key, required this.snapshot});
 
   final dynamic snapshot;
 
   @override
-  State<ShowVehiclesComponent> createState() => _ShowVehiclesComponentState();
+  State<ShowVehicleComponent> createState() => _ShowVehicleComponentState();
 }
 
-class _ShowVehiclesComponentState extends State<ShowVehiclesComponent> {
+class _ShowVehicleComponentState extends State<ShowVehicleComponent> {
   @override
   Widget build(BuildContext context) {
     VehicleModel vehicles = VehicleModel.fromJson(
