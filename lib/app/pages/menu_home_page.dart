@@ -21,7 +21,7 @@ class MenuHomePage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 12, bottom: 12.0),
-                child: Text('Lembretes Próximos'),
+                child: Text('Próximos Lembretes'),
               ),
               ReminderHomeComponent(),
               Padding(

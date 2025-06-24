@@ -246,56 +246,65 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                   ),
                 ],
               ),
-              SizedBox(
-                width: 150,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 7, top: 7),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(height: 7),
-                      Text('Moto Alugada'),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('veiculos')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          List<DropdownMenuItem> placasVeiculos = [];
-                          if (!snapshot.hasData) {
-                            const CircularProgressIndicator();
-                          } else {
-                            final placas = snapshot.data?.docs.reversed
-                                .toList();
-                            placasVeiculos.add(
-                              const DropdownMenuItem(
-                                value: '0',
-                                child: Text('Nenhuma'),
-                              ),
-                            );
-                            for (var placa in placas!) {
-                              placasVeiculos.add(
-                                DropdownMenuItem(
-                                  value: placa.get('Placa'),
-                                  child: Text(placa['Placa']),
-                                ),
-                              );
-                            }
-                          }
-
-                          return DropdownButton<dynamic>(
-                            items: placasVeiculos,
-                            onChanged: (placaValue) {
-                              setState(() {
-                                placaSelecionadaTxt = placaValue;
-                              });
-                            },
-                            value: placaSelecionadaTxt,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(height: 7),
+                  Text('Moto Alugada'),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('veiculos')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      List<DropdownMenuItem> placasVeiculos = [];
+                      if (!snapshot.hasData) {
+                        const CircularProgressIndicator();
+                      } else {
+                        final placas = snapshot.data?.docs.reversed.toList();
+                        placasVeiculos.add(
+                          const DropdownMenuItem(
+                            value: '0',
+                            child: Text('Nenhuma'),
+                          ),
+                        );
+                        for (var placa in placas!) {
+                          placasVeiculos.add(
+                            DropdownMenuItem(
+                              value: placa.get('Placa'),
+                              child: Text(placa['Placa']),
+                            ),
                           );
+                        }
+                      }
+
+                      return DropdownButtonFormField<dynamic>(
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: LightColors.iconColorGreen,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xffe2e8f0)),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        dropdownColor: Colors.white,
+                        items: placasVeiculos,
+                        onChanged: (placaValue) {
+                          setState(() {
+                            placaSelecionadaTxt = placaValue;
+                          });
                         },
-                      ),
-                    ],
+                        value: placaSelecionadaTxt,
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
               SizedBox(height: 24),
               ElevatedButton(

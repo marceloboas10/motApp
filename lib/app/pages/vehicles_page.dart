@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/components/show_vehicle_component.dart';
+import 'package:motapp/app/pages/register_vehicle_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class VehiclesPage extends StatefulWidget {
@@ -28,7 +29,14 @@ class _VehiclesPageState extends State<VehiclesPage> {
         actionsPadding: EdgeInsets.only(right: 8),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => RegisterVehiclePage(),
+                ),
+              );
+            },
             icon: Icon(
               Icons.add_circle,
               size: 40,

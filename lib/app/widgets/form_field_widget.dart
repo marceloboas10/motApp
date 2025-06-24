@@ -9,7 +9,7 @@ class FormFieldWidget extends StatelessWidget {
     required this.nameField,
     this.maxLengthCaracter,
     this.keyboardType,
-  required  this.inputFormatter,
+    required this.inputFormatter,
     this.message,
     this.onChange,
   });
@@ -47,11 +47,12 @@ class FormFieldWidget extends StatelessWidget {
             controller: nameField,
             style: TextStyle(color: Colors.black, fontSize: 18),
             decoration: InputDecoration(
+              border: OutlineInputBorder(borderSide: BorderSide.none),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: Color(0xffe2e8f0)),
               ),
-
+              errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: LightColors.iconColorGreen),

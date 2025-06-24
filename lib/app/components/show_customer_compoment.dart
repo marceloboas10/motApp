@@ -50,7 +50,7 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                       settings: RouteSettings(arguments: customer.id),
                     ),
                   ),
-                  child: Icon(Icons.edit_outlined),
+                  child: Icon(Icons.edit_outlined, size: 30),
                 ),
               ),
               Padding(

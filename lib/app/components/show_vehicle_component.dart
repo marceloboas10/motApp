@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/vehicle_model.dart';
+import 'package:motapp/app/pages/register_vehicle_page.dart';
 
 class ShowVehicleComponent extends StatefulWidget {
   const ShowVehicleComponent({super.key, required this.snapshot});
@@ -28,16 +29,22 @@ class _ShowVehicleComponentState extends State<ShowVehicleComponent> {
             children: [
               ListTile(
                 title: Text(
-                  '${vehicles.modelo} - ${vehicles.ano}',
+                  '${vehicles.fabricante}\n${vehicles.modelo} - ${vehicles.ano}',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
                   vehicles.placa,
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                trailing: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.edit_outlined),
+                trailing: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => RegisterVehiclePage(),
+                      settings: RouteSettings(arguments: vehicles.id),
+                    ),
+                  ),
+                  child: Icon(Icons.edit_outlined, size: 30),
                 ),
               ),
             ],

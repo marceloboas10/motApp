@@ -4,6 +4,7 @@ class VehicleModel {
   late String modelo;
   late String ano;
   late String placa;
+  late String cor;
   late String renavam;
 
   VehicleModel(
@@ -15,14 +16,12 @@ class VehicleModel {
     this.renavam,
   );
 
-  VehicleModel.fromJson(Map<String, dynamic> map, String id) {
-    id = id;
-    fabricante = map['Fabricante'];
-    modelo = map['Modelo'];
-    ano = map['Ano'];
-    placa = map['Placa'];
-    renavam = map['Renavam'];
-  }
+  VehicleModel.fromJson(Map<String, dynamic> map, this.id)
+    : fabricante = map['Fabricante'],
+      modelo = map['Modelo'],
+      ano = map['Ano'],
+      placa = map['Placa'],
+      renavam = map['Renavam'];
 
   Map<String, dynamic> toJson() {
     return {
