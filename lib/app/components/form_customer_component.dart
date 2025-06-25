@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:motapp/app/core/shared/utils/mask_form_formatter.dart';
+import 'package:motapp/app/services/cep_result_service.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 import 'package:motapp/app/widgets/form_field_widget.dart';
 
@@ -33,6 +34,7 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
   var cityTxt = TextEditingController();
   String? placaSelecionadaTxt;
   bool pagamentoPendenteTxt = false;
+  final CepResultService _cepResultService = CepResultService();
 
   void getDocumentById(String id) async {
     await FirebaseFirestore.instance.collection('clientes').doc(id).get().then((
@@ -166,23 +168,20 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                 message: 'Preencha o CEP',
                 onChange: (String value) async {
                   var cep = value;
-                  if (cep.length > 8) {
-                    var response = await http.get(
-                      Uri.parse('https://viacep.com.br/ws/$cep/json'),
-                    );
-                    var json = jsonDecode(response.body);
-                    if (json['erro'] == 'true') {
-                      streetTxt.text = 'CEP NÃO EXISTE';
+                  if (cep.length > 5) {
+                    final result = await _cepResultService.buscarCep(cep);
+
+                    if (result.error != null) {
+                      streetTxt.text = result.error!;
                       districtTxt.text = '';
                       cityTxt.text = '';
                       complementTxt.text = '';
-                      cepTxt.text = '';
                     } else {
-                      streetTxt.text = json['logradouro'];
-                      districtTxt.text = json['bairro'];
-                      cityTxt.text = json['localidade'];
-                      complementTxt.text = json['complemento'];
-                      cepTxt.text = json['cep'];
+                      streetTxt.text = result.logradouro ?? '';
+                      districtTxt.text = result.bairro ?? '';
+                      cityTxt.text = result.cidade ?? '';
+                      complementTxt.text = result.complemento ?? '';
+                      cepTxt.text = cep;
                     }
                   }
                 },

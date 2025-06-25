@@ -84,7 +84,6 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                 FormFieldWidget(
                   nameLabel: 'Placa',
                   nameField: plateVehicleTxt,
-                  keyboardType: TextInputType.number,
                   inputFormatter:
                       FilteringTextInputFormatter.singleLineFormatter,
                   message: 'Preencha a placa',
@@ -92,7 +91,6 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                 FormFieldWidget(
                   nameLabel: 'Cor',
                   nameField: colorVehicleTxt,
-                  keyboardType: TextInputType.number,
                   inputFormatter:
                       FilteringTextInputFormatter.singleLineFormatter,
                   message: 'Preencha a cor',
@@ -124,8 +122,9 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                     if (formValid) {
                       if (widget.id == null) {
                         //ADICIONA UM NOVO DOCUMENTO
-                        db.collection('clientes').add({
+                        db.collection('veiculos').add({
                           'Ano': yearVehicleTxt.text,
+                          'Cor': colorVehicleTxt.text,
                           'Fabricante': manufacturerVehicleTxt.text,
                           'Modelo': modelVehicleTxt.text,
                           'Placa': plateVehicleTxt.text,
@@ -138,6 +137,7 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                             .doc(widget.id.toString())
                             .update({
                               'Ano': yearVehicleTxt.text,
+                              'Cor': colorVehicleTxt.text,
                               'Fabricante': manufacturerVehicleTxt.text,
                               'Modelo': modelVehicleTxt.text,
                               'Placa': plateVehicleTxt.text,
@@ -155,7 +155,7 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                     }
                   },
                   child: Text(
-                    'SALVAR CLIENTE',
+                    'SALVAR VEÍCULO',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
