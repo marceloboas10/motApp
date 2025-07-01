@@ -24,7 +24,6 @@ class _ShowVehicleComponentState extends State<ShowVehicleComponent> {
       child: Card(
         color: Colors.white,
         child: SizedBox(
-          height: 85,
           child: Column(
             children: [
               ListTile(

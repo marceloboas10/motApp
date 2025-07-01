@@ -37,21 +37,23 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
     await FirebaseFirestore.instance.collection('clientes').doc(id).get().then((
       valor,
     ) {
-      nameTxt.text = valor.get('Nome');
-      rgTxt.text = valor.get('RG');
-      cpfTxt.text = valor.get('CPF');
-      cellphoneTxt.text = valor.get('Celular');
-      cellphone2Txt.text = valor.get('Celular_2');
-      phoneTxt.text = valor.get('Telefone_Referencia');
-      validateChnTxt.text = valor.get('Validade_CNH');
-      cepTxt.text = valor.get('CEP');
-      streetTxt.text = valor.get('Endereço');
-      streetNumberTxt.text = valor.get('Numero_Residencia');
-      complementTxt.text = valor.get('Complemento');
-      districtTxt.text = valor.get('Bairro');
-      cityTxt.text = valor.get('Cidade');
-      placaSelecionadaTxt = valor.get('Moto_Alugada');
-      pagamentoPendenteTxt = valor.get('Pagamento_Pendente');
+      setState(() {
+        nameTxt.text = valor.get('Nome');
+        rgTxt.text = valor.get('RG');
+        cpfTxt.text = valor.get('CPF');
+        cellphoneTxt.text = valor.get('Celular');
+        cellphone2Txt.text = valor.get('Celular_2');
+        phoneTxt.text = valor.get('Telefone_Referencia');
+        validateChnTxt.text = valor.get('Validade_CNH');
+        cepTxt.text = valor.get('CEP');
+        streetTxt.text = valor.get('Endereço');
+        streetNumberTxt.text = valor.get('Numero_Residencia');
+        complementTxt.text = valor.get('Complemento');
+        districtTxt.text = valor.get('Bairro');
+        cityTxt.text = valor.get('Cidade');
+        placaSelecionadaTxt = valor.get('Moto_Alugada');
+        pagamentoPendenteTxt = valor.get('Pagamento_Pendente');
+      });
     });
   }
 
@@ -302,6 +304,24 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                   ),
                 ],
               ),
+              SizedBox(height: 12),
+              Row(
+                children: [
+                  Text('Pagamento Pendente?'),
+                  Switch(
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: LightColors.lightGray,
+                    activeTrackColor: LightColors.buttonRed,
+                    activeColor: Colors.white,
+                    value: pagamentoPendenteTxt,
+                    onChanged: (value) {
+                      setState(() {
+                        pagamentoPendenteTxt = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
               SizedBox(height: 24),
               ElevatedButton(
                 style: ButtonStyle(
@@ -336,6 +356,7 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                         'Bairro': districtTxt.text,
                         'Cidade': cityTxt.text,
                         'Moto_Alugada': placaSelecionadaTxt,
+                        'Pagamento_Pendente': pagamentoPendenteTxt,
                       });
                     } else {
                       //ATUALIZA DOCUMENTO

@@ -16,7 +16,6 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
       children: [
         Card(
           child: Container(
-            height: 80,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -26,9 +25,11 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
             child: Column(
               children: [
                 Text('Saldo do Mês'),
-                Text(
-                  'R\$ 1.200,50',
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                FittedBox(
+                  child: Text(
+                    'R\$ 1.200,50',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                  ),
                 ),
               ],
             ),
@@ -56,12 +57,14 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Text(
-                        'R\$ 2.370,00',
-                        style: TextStyle(
-                          color: LightColors.iconColorGreen,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w700,
+                      FittedBox(
+                        child: Text(
+                          'R\$ 22.370,00',
+                          style: TextStyle(
+                            color: LightColors.iconColorGreen,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],
@@ -89,12 +92,14 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Text(
-                        'R\$ 300',
-                        style: TextStyle(
-                          color: LightColors.buttonRed,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w700,
+                      FittedBox(
+                        child: Text(
+                          'R\$ 30000000',
+                          style: TextStyle(
+                            color: LightColors.buttonRed,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],

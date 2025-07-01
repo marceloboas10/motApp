@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/pages/customers_page.dart';
+import 'package:motapp/app/pages/maintence_page.dart';
 import 'package:motapp/app/pages/menu_home_page.dart';
+import 'package:motapp/app/pages/registrations_page.dart';
 import 'package:motapp/app/pages/vehicles_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
@@ -16,7 +17,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [MenuHomePage(), CustomersPage(), VehiclesPage()];
+    final List<Widget> pages = [
+      MenuHomePage(),
+      RegistrationsPage(),
+      VehiclesPage(),
+      MaintencePage(),
+    ];
 
     return SafeArea(
       child: Scaffold(
@@ -30,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_add_alt_1_rounded),
-              label: 'Clientes',
+              label: 'Cadastros',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.two_wheeler_sharp),
@@ -38,7 +44,7 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.two_wheeler_sharp),
-              label: 'Lembretes',
+              label: 'Manutenção',
             ),
           ],
           currentIndex: _currentPage,

@@ -20,11 +20,13 @@ class StatusOperationalComponent extends StatelessWidget {
               padding: EdgeInsets.all(8),
               child: Column(
                 children: [
-                  Text(
-                    'Motos Alugadas',
-                    style: TextStyle(
-                      color: LightColors.gray,
-                      fontWeight: FontWeight.w500,
+                  FittedBox(
+                    child: Text(
+                      'Motos Alugadas',
+                      style: TextStyle(
+                        color: LightColors.gray,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   Text(
@@ -53,11 +55,13 @@ class StatusOperationalComponent extends StatelessWidget {
               padding: EdgeInsets.all(8),
               child: Column(
                 children: [
-                  Text(
-                    'Pagamentos Pendentes',
-                    style: TextStyle(
-                      color: LightColors.gray,
-                      fontWeight: FontWeight.w500,
+                  FittedBox(
+                    child: Text(
+                      'Pagamentos Pendentes',
+                      style: TextStyle(
+                        color: LightColors.gray,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   Text(

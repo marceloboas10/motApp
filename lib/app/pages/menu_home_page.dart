@@ -22,7 +22,7 @@ class MenuHomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     'Resumo Financeiro',
                     style: TextStyle(

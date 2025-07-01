@@ -24,14 +24,13 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
       child: Card(
         color: Colors.white,
         child: SizedBox(
-          height: 125,
           child: Column(
             children: [
               ListTile(
                 leading: CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(
-                    'https://media.licdn.com/dms/image/v2/C4D03AQHW9KH-hxDGfQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1663117292082?e=1755734400&v=beta&t=cbHpnAIAp93tCWaawOjkOQmPU__Ici-yi6_jyjVsSJw',
+                    'https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1',
                   ),
                 ),
                 title: Text(
@@ -69,13 +68,16 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                         child: Text(customer.motoAlugada.toString()),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: LightColors.buttonRed,
-                        borderRadius: BorderRadius.circular(16),
+                    Visibility(
+                      visible: customer.pagamentoPendente!,
+                      child: Container(
+                        padding: EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: LightColors.buttonRed,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text('Pagamento Pendente'),
                       ),
-                      child: Text('Pagamento Pendente'),
                     ),
                   ],
                 ),
