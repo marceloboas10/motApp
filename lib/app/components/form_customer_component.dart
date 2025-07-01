@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:motapp/app/core/shared/utils/mask_form_formatter.dart';
 import 'package:motapp/app/services/cep_result_service.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';

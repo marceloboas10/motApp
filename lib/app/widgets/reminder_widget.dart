@@ -17,7 +17,11 @@ class _ReminderHomeState extends State<ReminderWidget> {
       elevation: 2,
       color: Colors.white,
       child: ListTile(
-        leading: Icon(Icons.offline_bolt_rounded, color: LightColors.buttonRed),
+        leading: Icon(
+          Icons.notifications_rounded,
+          color: Colors.amber,
+          size: 30,
+        ),
         title: Text('Troca de óleo'),
         subtitle: Text(
           'Vence em 5 dias',

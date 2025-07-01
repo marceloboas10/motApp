@@ -30,7 +30,7 @@ class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
             SizedBox(height: 12),
-            Icon(Icons.notifications_none),
+            Icon(Icons.notifications_rounded, color: Colors.amber),
             CircleAvatar(
               backgroundColor: LightColors.iconColorGreen,
               child: Text('U', style: TextStyle(color: Colors.white)),
