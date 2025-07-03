@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:motapp/app/pages/customers_page.dart';
+import 'package:motapp/app/pages/vehicles_page.dart';
 import 'package:motapp/app/widgets/card_registration_widget.dart';
 
 class RegistrationsPage extends StatelessWidget {
@@ -15,6 +17,42 @@ class RegistrationsPage extends StatelessWidget {
             CardRegistrationWidget(
               icon: Icons.group_rounded,
               title: 'Clientes',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => CustomersPage(),
+                ),
+              ),
+            ),
+            CardRegistrationWidget(
+              icon: Icons.motorcycle_rounded,
+              title: 'Veículos',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => VehiclesPage(),
+                ),
+              ),
+            ),
+            CardRegistrationWidget(
+              icon: Icons.storage_outlined,
+              title: 'Produtos',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => CustomersPage(),
+                ),
+              ),
+            ),
+            CardRegistrationWidget(
+              icon: Icons.notifications_active_sharp,
+              title: 'Lembretes',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => CustomersPage(),
+                ),
+              ),
             ),
           ],
         ),
