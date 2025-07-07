@@ -27,8 +27,8 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
                 Text('Saldo do Mês'),
                 FittedBox(
                   child: Text(
-                    'R\$ 1.200,50',
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                    'R\$ 8.200,50',
+                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
                   ),
                 ),
               ],
@@ -59,10 +59,10 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
                       ),
                       FittedBox(
                         child: Text(
-                          'R\$ 22.370,00',
+                          'R\$ 11.031,00',
                           style: TextStyle(
                             color: LightColors.iconColorGreen,
-                            fontSize: 26,
+                            fontSize: 23,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -94,10 +94,10 @@ class _FinancialSummaryComponentState extends State<FinancialSummaryComponent> {
                       ),
                       FittedBox(
                         child: Text(
-                          'R\$ 30000000',
+                          'R\$ 2.830,50',
                           style: TextStyle(
                             color: LightColors.buttonRed,
-                            fontSize: 26,
+                            fontSize: 23,
                             fontWeight: FontWeight.w700,
                           ),
                         ),

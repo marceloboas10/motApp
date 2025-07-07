@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motapp/app/components/show_product_component.dart';
-import 'package:motapp/app/pages/register_product_page.dart';
+import 'package:motapp/app/components/show_vehicle_component.dart';
+import 'package:motapp/app/pages/vehicles/register_vehicle_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class ProductsPage extends StatefulWidget {
-  const ProductsPage({super.key});
+class VehiclesPage extends StatefulWidget {
+  const VehiclesPage({super.key});
 
   @override
-  State<ProductsPage> createState() => _ProductsPageState();
+  State<VehiclesPage> createState() => _VehiclesPageState();
 }
 
-class _ProductsPageState extends State<ProductsPage> {
-  late CollectionReference products;
+class _VehiclesPageState extends State<VehiclesPage> {
+  late CollectionReference vehicle;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
 
   @override
   void initState() {
     super.initState();
-    products = FirebaseFirestore.instance.collection('produtos');
+    vehicle = FirebaseFirestore.instance.collection('veiculos');
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();
@@ -29,11 +29,17 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Veículos'),
         centerTitle: true,
-        title: const Text('Produtos'),
         actionsPadding: EdgeInsets.only(right: 8),
         actions: [
           IconButton(
@@ -41,7 +47,7 @@ class _ProductsPageState extends State<ProductsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterProductPage(),
+                  builder: (BuildContext context) => RegisterVehiclePage(),
                 ),
               );
             },
@@ -56,16 +62,15 @@ class _ProductsPageState extends State<ProductsPage> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsetsGeometry.all(16),
+            padding: const EdgeInsets.all(16),
             child: CupertinoSearchTextField(
               controller: _searchController,
-              placeholder: 'Buscar cliente',
               backgroundColor: Colors.white,
             ),
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: products.orderBy('Produto').snapshots(),
+              stream: vehicle.orderBy('Fabricante').snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -76,19 +81,18 @@ class _ProductsPageState extends State<ProductsPage> {
                     return Center(child: CircularProgressIndicator());
                   default:
                     final dados = snapshot.requireData;
-
                     final filteredDocs = _searchText.isEmpty
                         ? dados.docs
                         : dados.docs.where((doc) {
-                            final nome = (doc['Nome'] ?? '')
+                            final plate = (doc['Placa'] ?? '')
                                 .toString()
                                 .toLowerCase();
-                            return nome.contains(_searchText);
+                            return plate.contains(_searchText);
                           }).toList();
                     return ListView.builder(
                       itemCount: filteredDocs.length,
                       itemBuilder: (context, index) =>
-                          ShowProductComponent(snapshot: filteredDocs[index]),
+                          ShowVehicleComponent(snapshot: filteredDocs[index]),
                     );
                 }
               },

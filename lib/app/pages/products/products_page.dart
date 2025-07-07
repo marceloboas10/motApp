@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motapp/app/components/show_customer_compoment.dart';
-import 'package:motapp/app/pages/register_customer_page.dart';
+import 'package:motapp/app/components/show_product_component.dart';
+import 'package:motapp/app/pages/products/register_product_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class CustomersPage extends StatefulWidget {
-  const CustomersPage({super.key});
+class ProductsPage extends StatefulWidget {
+  const ProductsPage({super.key});
 
   @override
-  State<CustomersPage> createState() => _CustomersPageState();
+  State<ProductsPage> createState() => _ProductsPageState();
 }
 
-class _CustomersPageState extends State<CustomersPage> {
-  late CollectionReference customers;
+class _ProductsPageState extends State<ProductsPage> {
+  late CollectionReference products;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
 
   @override
   void initState() {
     super.initState();
-    customers = FirebaseFirestore.instance.collection('clientes');
+    products = FirebaseFirestore.instance.collection('produtos');
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();
@@ -29,17 +29,11 @@ class _CustomersPageState extends State<CustomersPage> {
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Clientes'),
         centerTitle: true,
+        title: const Text('Produtos'),
         actionsPadding: EdgeInsets.only(right: 8),
         actions: [
           IconButton(
@@ -47,7 +41,7 @@ class _CustomersPageState extends State<CustomersPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterCustomerPage(),
+                  builder: (BuildContext context) => RegisterProductPage(),
                 ),
               );
             },
@@ -62,7 +56,7 @@ class _CustomersPageState extends State<CustomersPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsetsGeometry.all(16),
             child: CupertinoSearchTextField(
               controller: _searchController,
               placeholder: 'Buscar cliente',
@@ -71,7 +65,7 @@ class _CustomersPageState extends State<CustomersPage> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: customers.orderBy('Nome').snapshots(),
+              stream: products.orderBy('Produto').snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -94,7 +88,7 @@ class _CustomersPageState extends State<CustomersPage> {
                     return ListView.builder(
                       itemCount: filteredDocs.length,
                       itemBuilder: (context, index) =>
-                          ShowCustomerCompoment(snapshot: filteredDocs[index]),
+                          ShowProductComponent(snapshot: filteredDocs[index]),
                     );
                 }
               },

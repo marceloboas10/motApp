@@ -33,7 +33,7 @@ class StatusOperationalComponent extends StatelessWidget {
                     '1',
                     style: TextStyle(
                       color: LightColors.buttonRed,
-                      fontSize: 26,
+                      fontSize: 23,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -68,7 +68,7 @@ class StatusOperationalComponent extends StatelessWidget {
                     '1',
                     style: TextStyle(
                       color: LightColors.buttonRed,
-                      fontSize: 26,
+                      fontSize: 23,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motapp/app/components/show_vehicle_component.dart';
-import 'package:motapp/app/pages/register_vehicle_page.dart';
+import 'package:motapp/app/components/show_customer_compoment.dart';
+import 'package:motapp/app/pages/customers/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class VehiclesPage extends StatefulWidget {
-  const VehiclesPage({super.key});
+class CustomersPage extends StatefulWidget {
+  const CustomersPage({super.key});
 
   @override
-  State<VehiclesPage> createState() => _VehiclesPageState();
+  State<CustomersPage> createState() => _CustomersPageState();
 }
 
-class _VehiclesPageState extends State<VehiclesPage> {
-  late CollectionReference vehicle;
+class _CustomersPageState extends State<CustomersPage> {
+  late CollectionReference customers;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
 
   @override
   void initState() {
     super.initState();
-    vehicle = FirebaseFirestore.instance.collection('veiculos');
+    customers = FirebaseFirestore.instance.collection('clientes');
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();
@@ -30,15 +30,15 @@ class _VehiclesPageState extends State<VehiclesPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Veículos'),
+        title: const Text('Clientes'),
         centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 8),
         actions: [
@@ -47,7 +47,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterVehiclePage(),
+                  builder: (BuildContext context) => RegisterCustomerPage(),
                 ),
               );
             },
@@ -65,12 +65,13 @@ class _VehiclesPageState extends State<VehiclesPage> {
             padding: const EdgeInsets.all(16),
             child: CupertinoSearchTextField(
               controller: _searchController,
+              placeholder: 'Buscar cliente',
               backgroundColor: Colors.white,
             ),
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: vehicle.orderBy('Fabricante').snapshots(),
+              stream: customers.orderBy('Nome').snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -81,18 +82,19 @@ class _VehiclesPageState extends State<VehiclesPage> {
                     return Center(child: CircularProgressIndicator());
                   default:
                     final dados = snapshot.requireData;
+
                     final filteredDocs = _searchText.isEmpty
                         ? dados.docs
                         : dados.docs.where((doc) {
-                            final plate = (doc['Placa'] ?? '')
+                            final nome = (doc['Nome'] ?? '')
                                 .toString()
                                 .toLowerCase();
-                            return plate.contains(_searchText);
+                            return nome.contains(_searchText);
                           }).toList();
                     return ListView.builder(
                       itemCount: filteredDocs.length,
                       itemBuilder: (context, index) =>
-                          ShowVehicleComponent(snapshot: filteredDocs[index]),
+                          ShowCustomerCompoment(snapshot: filteredDocs[index]),
                     );
                 }
               },

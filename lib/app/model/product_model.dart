@@ -7,7 +7,7 @@ class ProductModel {
 
   ProductModel.froJson(Map<String, dynamic> map, this.id)
     : product = map['Produto'],
-      amount = map['Quantidade'];
+      amount = int.tryParse(map['Quantidade'].toString())  ?? 0;
 
   Map<String, dynamic> toJson() {
     return {'product': product, 'amount': amount};

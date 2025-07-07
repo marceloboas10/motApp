@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/pages/maintence_page.dart';
-import 'package:motapp/app/pages/menu_home_page.dart';
+import 'package:motapp/app/pages/home/menu_home_page.dart';
 import 'package:motapp/app/pages/registrations_page.dart';
-import 'package:motapp/app/pages/vehicles_page.dart';
+import 'package:motapp/app/pages/vehicles/vehicles_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class HomePage extends StatefulWidget {

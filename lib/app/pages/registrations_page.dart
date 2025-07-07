@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/pages/customers_page.dart';
-import 'package:motapp/app/pages/products_page.dart';
-import 'package:motapp/app/pages/vehicles_page.dart';
+import 'package:motapp/app/pages/customers/customers_page.dart';
+import 'package:motapp/app/pages/products/products_page.dart';
+import 'package:motapp/app/pages/vehicles/vehicles_page.dart';
 import 'package:motapp/app/widgets/card_registration_widget.dart';
 
 class RegistrationsPage extends StatelessWidget {

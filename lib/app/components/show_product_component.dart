@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/product_model.dart';
-import 'package:motapp/app/pages/register_product_page.dart';
+import 'package:motapp/app/pages/products/register_product_page.dart';
 
 class ShowProductComponent extends StatefulWidget {
   const ShowProductComponent({super.key, required this.snapshot});
@@ -39,7 +39,7 @@ class _ShowProductComponentState extends State<ShowProductComponent> {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => RegisterProductPage(),
-                      settings: RouteSettings(arguments: widget.snapshot),
+                      settings: RouteSettings(arguments: widget.snapshot.id),
                     ),
                   ),
                   child: Icon(Icons.edit_outlined, size: 30),

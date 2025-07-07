@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/pages/create_account_page.dart';
-import 'package:motapp/app/pages/home_page.dart';
+import 'package:motapp/app/pages/login/create_account_page.dart';
+import 'package:motapp/app/pages/home/home_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 import 'package:motapp/app/viewmodels/login_view_model.dart';
 import 'package:motapp/app/widgets/text_field_login_widget.dart';

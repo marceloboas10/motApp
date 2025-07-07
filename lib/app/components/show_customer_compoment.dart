@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/customer_model.dart';
-import 'package:motapp/app/pages/register_customer_page.dart';
+import 'package:motapp/app/pages/customers/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class ShowCustomerCompoment extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/pages/home_page.dart';
+import 'package:motapp/app/pages/home/home_page.dart';
 import 'package:motapp/app/theme/app_theme.dart';
 
 class Motapp extends StatelessWidget {

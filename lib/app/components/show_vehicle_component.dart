@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/vehicle_model.dart';
-import 'package:motapp/app/pages/register_vehicle_page.dart';
+import 'package:motapp/app/pages/vehicles/register_vehicle_page.dart';
 
 class ShowVehicleComponent extends StatefulWidget {
   const ShowVehicleComponent({super.key, required this.snapshot});
