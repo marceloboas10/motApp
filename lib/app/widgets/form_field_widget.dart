@@ -7,7 +7,7 @@ class FormFieldWidget extends StatelessWidget {
     super.key,
     required this.nameLabel,
     required this.nameField,
-    this.maxLengthCaracter,
+    this.maxLine,
     this.keyboardType,
     required this.inputFormatter,
     this.message,
@@ -16,7 +16,7 @@ class FormFieldWidget extends StatelessWidget {
 
   final String nameLabel;
   final TextEditingController nameField;
-  final int? maxLengthCaracter;
+  final int? maxLine;
   final TextInputType? keyboardType;
   final TextInputFormatter inputFormatter;
   final String? message;
@@ -37,7 +37,6 @@ class FormFieldWidget extends StatelessWidget {
           child: TextFormField(
             textInputAction: TextInputAction.next,
             cursorColor: Colors.black,
-            maxLength: maxLengthCaracter,
             validator: (String? value) {
               if (value == null || value.isEmpty) {
                 return message;
@@ -45,6 +44,7 @@ class FormFieldWidget extends StatelessWidget {
               return null;
             },
             controller: nameField,
+            maxLines: maxLine,
             style: TextStyle(color: Colors.black, fontSize: 18),
             decoration: InputDecoration(
               border: OutlineInputBorder(borderSide: BorderSide.none),

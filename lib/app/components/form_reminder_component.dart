@@ -1,35 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:motapp/app/core/shared/utils/mask_form_formatter.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 import 'package:motapp/app/widgets/form_field_widget.dart';
 
-class FormProductComponent extends StatefulWidget {
-  const FormProductComponent({super.key, required this.id});
+class FormReminderComponent extends StatefulWidget {
+  const FormReminderComponent({super.key, required this.id});
   final Object? id;
 
   @override
-  State<FormProductComponent> createState() => _FormProductComponentState();
+  State<FormReminderComponent> createState() => _FormReminderComponentState();
 }
 
-class _FormProductComponentState extends State<FormProductComponent> {
+class _FormReminderComponentState extends State<FormReminderComponent> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController product = TextEditingController();
-  final TextEditingController amount = TextEditingController();
+  final TextEditingController reminder = TextEditingController();
+  final TextEditingController description = TextEditingController();
+  final TextEditingController date = TextEditingController();
 
   void getDocumentById(String id) async {
-    await FirebaseFirestore.instance.collection('produtos').doc(id).get().then((
-      valor,
-    ) {
-      product.text = valor.get('Produto');
-      amount.text = valor.get('Quantidade').toString();
-    });
+    await FirebaseFirestore.instance.collection('lembretes').doc(id).get().then(
+      (valor) {
+        reminder.text = valor.get('Lembrete');
+        description.text = valor.get('Descrição').toString();
+        date.text = valor.get('Data').toString();
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.id != null) {
-      if (product.text == '' && amount.text == '') {
+      if (reminder.text == '' && description.text == '' && date.text == '') {
         getDocumentById(widget.id.toString());
       }
     }
@@ -42,22 +45,31 @@ class _FormProductComponentState extends State<FormProductComponent> {
         height: MediaQuery.of(context).size.height,
         child: Padding(
           padding: EdgeInsetsGeometry.all(5),
-          child: Column(
+          child: ListView(
+            shrinkWrap: true,
             children: [
               FormFieldWidget(
-                nameLabel: 'Produto',
-                nameField: product,
+                nameLabel: 'Lembrete',
+                nameField: reminder,
                 inputFormatter: FilteringTextInputFormatter.singleLineFormatter,
-                message: 'Preencha o nome do produto ',
+                message: 'Preencha o lembrete ',
               ),
               SizedBox(height: 12),
               FormFieldWidget(
-                nameLabel: 'Quantidade',
-                nameField: amount,
-                inputFormatter: FilteringTextInputFormatter.digitsOnly,
-                keyboardType: TextInputType.number,
-                message: 'Preencha o nome do produto ',
+                nameLabel: 'Descrição',
+                nameField: description,
+                maxLine: 3,
+                inputFormatter: FilteringTextInputFormatter.singleLineFormatter,
+                message: 'Preencha a descrição ',
               ),
+              SizedBox(height: 12),
+              FormFieldWidget(
+                nameLabel: 'Data',
+                nameField: date,
+                inputFormatter: MaskFormFormatter().date,
+                message: 'Preencha o lembrete ',
+              ),
+              SizedBox(height: 12),
               ElevatedButton(
                 style: ButtonStyle(
                   shape: WidgetStatePropertyAll(
@@ -76,18 +88,20 @@ class _FormProductComponentState extends State<FormProductComponent> {
                   if (formValid) {
                     if (widget.id == null) {
                       //ADICIONA UM NOVO DOCUMENTO
-                      db.collection('produtos').add({
-                        'Produto': product.text,
-                        'Quantidade': amount.text,
+                      db.collection('lembretes').add({
+                        'Lembrete': reminder.text,
+                        'Descrição': description.text,
+                        'Data': date.text,
                       });
                     } else {
                       //ATUALIZA DOCUMENTO
                       db
-                          .collection('produtos')
+                          .collection('lembretes')
                           .doc(widget.id.toString())
                           .update({
-                            'Produto': product.text,
-                            'Quantidade': amount.text,
+                            'Lembrete': reminder.text,
+                            'Descrição': description.text,
+                            'Data': date.text,
                           });
                     }
                     Navigator.pop(context);
@@ -101,7 +115,7 @@ class _FormProductComponentState extends State<FormProductComponent> {
                   }
                 },
                 child: Text(
-                  'SALVAR PRODUTO',
+                  'SALVAR LEMBRETE',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,

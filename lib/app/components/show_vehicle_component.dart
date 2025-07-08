@@ -20,7 +20,7 @@ class _ShowVehicleComponentState extends State<ShowVehicleComponent> {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Card(
         color: Colors.white,
         child: SizedBox(

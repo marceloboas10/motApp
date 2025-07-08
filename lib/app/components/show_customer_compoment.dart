@@ -20,7 +20,7 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Card(
         color: Colors.white,
         child: SizedBox(

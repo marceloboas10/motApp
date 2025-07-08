@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/model/product_model.dart';
-import 'package:motapp/app/pages/products/register_product_page.dart';
+import 'package:motapp/app/model/reminder_model.dart';
+import 'package:motapp/app/pages/reminders/register_reminder_page.dart';
 
-class ShowProductComponent extends StatefulWidget {
-  const ShowProductComponent({super.key, required this.snapshot});
+class ShowReminderComponent extends StatefulWidget {
+  const ShowReminderComponent({super.key, required this.snapshot});
   final dynamic snapshot;
 
   @override
-  State<ShowProductComponent> createState() => _ShowProductComponentState();
+  State<ShowReminderComponent> createState() => _ShowReminderComponentState();
 }
 
-class _ShowProductComponentState extends State<ShowProductComponent> {
+class _ShowReminderComponentState extends State<ShowReminderComponent> {
   @override
   Widget build(BuildContext context) {
-    ProductModel product = ProductModel.froJson(
+    ReminderModel reminder = ReminderModel.froJson(
       widget.snapshot.data(),
       widget.snapshot.id,
     );
@@ -27,19 +27,19 @@ class _ShowProductComponentState extends State<ShowProductComponent> {
             children: [
               ListTile(
                 title: Text(
-                  product.product,
+                  reminder.reminder,
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
-                  ' Quantidade: ${product.amount}',
+                  reminder.description,
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
                 trailing: InkWell(
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => RegisterProductPage(),
-                      settings: RouteSettings(arguments: widget.snapshot.id),
+                      builder: (BuildContext context) => RegisterReminderPage(),
+                      settings: RouteSettings(arguments: reminder.id),
                     ),
                   ),
                   child: Icon(Icons.edit_outlined, size: 30),
