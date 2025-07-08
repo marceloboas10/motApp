@@ -64,6 +64,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: CupertinoSearchTextField(
+              placeholder: 'Buscar veículo',
               controller: _searchController,
               backgroundColor: Colors.white,
             ),

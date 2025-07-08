@@ -59,7 +59,7 @@ class _ProductsPageState extends State<ProductsPage> {
             padding: EdgeInsetsGeometry.all(16),
             child: CupertinoSearchTextField(
               controller: _searchController,
-              placeholder: 'Buscar cliente',
+              placeholder: 'Buscar produto',
               backgroundColor: Colors.white,
             ),
           ),
@@ -80,7 +80,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     final filteredDocs = _searchText.isEmpty
                         ? dados.docs
                         : dados.docs.where((doc) {
-                            final nome = (doc['Nome'] ?? '')
+                            final nome = (doc['Produto'] ?? '')
                                 .toString()
                                 .toLowerCase();
                             return nome.contains(_searchText);
