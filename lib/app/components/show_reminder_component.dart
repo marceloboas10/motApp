@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:motapp/app/model/reminder_model.dart';
 import 'package:motapp/app/pages/reminders/register_reminder_page.dart';
+import 'package:motapp/app/theme/light/light_colors.dart';
 
 class ShowReminderComponent extends StatefulWidget {
   const ShowReminderComponent({super.key, required this.snapshot});
@@ -18,6 +20,13 @@ class _ShowReminderComponentState extends State<ShowReminderComponent> {
       widget.snapshot.id,
     );
 
+    DateTime? date;
+    try {
+      date = DateTime.parse(reminder.date);
+    } catch (_) {
+      date = null;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Card(
@@ -31,18 +40,33 @@ class _ShowReminderComponentState extends State<ShowReminderComponent> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
-                  reminder.description,
+                  'Vencimento: ${DateFormat('dd/MM/yyyy').format(date!)}',
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                trailing: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => RegisterReminderPage(),
-                      settings: RouteSettings(arguments: reminder.id),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              RegisterReminderPage(),
+                          settings: RouteSettings(arguments: reminder.id),
+                        ),
+                      ),
+                      child: Icon(Icons.edit_outlined, size: 30),
                     ),
-                  ),
-                  child: Icon(Icons.edit_outlined, size: 30),
+                    SizedBox(width: 8),
+                    InkWell(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.delete_outlined,
+                        size: 30,
+                        color: LightColors.buttonRed,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

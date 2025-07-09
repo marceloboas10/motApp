@@ -12,6 +12,8 @@ class FormFieldWidget extends StatelessWidget {
     required this.inputFormatter,
     this.message,
     this.onChange,
+    this.onTap,
+    this.readOnly = false,
   });
 
   final String nameLabel;
@@ -21,6 +23,8 @@ class FormFieldWidget extends StatelessWidget {
   final TextInputFormatter inputFormatter;
   final String? message;
   final ValueChanged<String>? onChange;
+  final VoidCallback? onTap;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,7 @@ class FormFieldWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: TextFormField(
+            readOnly: readOnly!,
             textInputAction: TextInputAction.next,
             cursorColor: Colors.black,
             validator: (String? value) {
@@ -61,6 +66,7 @@ class FormFieldWidget extends StatelessWidget {
             ),
             keyboardType: keyboardType,
             onChanged: onChange,
+            onTap: onTap,
             inputFormatters: [inputFormatter],
           ),
         ),

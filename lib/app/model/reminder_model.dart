@@ -10,7 +10,8 @@ class ReminderModel {
 
   ReminderModel.froJson(Map<String, dynamic> map, this.id)
     : reminder = map['Lembrete'],
-      description = map['Descrição'],date = (map['Data'] as Timestamp).toDate().toIso8601String();
+      description = map['Descrição'],
+      date = (map['Data'] as Timestamp).toDate().toIso8601String();
 
   Map<String, dynamic> toJson() {
     return {'reminder': reminder, 'description': description, 'date': date};

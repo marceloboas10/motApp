@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:motapp/app/core/shared/utils/mask_form_formatter.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 import 'package:motapp/app/widgets/form_field_widget.dart';
+import 'package:intl/intl.dart';
 
 class FormReminderComponent extends StatefulWidget {
   const FormReminderComponent({super.key, required this.id});
@@ -17,22 +18,40 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController reminder = TextEditingController();
   final TextEditingController description = TextEditingController();
-  final TextEditingController date = TextEditingController();
+  DateTime? _selectedDate;
+  final _dateController = TextEditingController();
 
   void getDocumentById(String id) async {
     await FirebaseFirestore.instance.collection('lembretes').doc(id).get().then(
       (valor) {
         reminder.text = valor.get('Lembrete');
         description.text = valor.get('Descrição').toString();
-        date.text = valor.get('Data').toString();
+        final ts = valor.get('Data');
+        if (ts != null && ts is Timestamp) {
+          _selectedDate = ts.toDate();
+          _dateController.text = DateFormat(
+            'dd/MM/yyyy',
+          ).format(_selectedDate!);
+        } else {
+          _selectedDate = null;
+          _dateController.text = '';
+        }
       },
     );
   }
 
   @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.id != null) {
-      if (reminder.text == '' && description.text == '' && date.text == '') {
+      if (reminder.text == '' &&
+          description.text == '' &&
+          _dateController.text == '') {
         getDocumentById(widget.id.toString());
       }
     }
@@ -64,8 +83,24 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
               ),
               SizedBox(height: 12),
               FormFieldWidget(
-                nameLabel: 'Data',
-                nameField: date,
+                nameLabel: 'Data de Vencimento',
+                nameField: _dateController,
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2100),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      _selectedDate = picked;
+                      _dateController.text = DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(picked);
+                    });
+                  }
+                },
                 inputFormatter: MaskFormFormatter().date,
                 message: 'Preencha o lembrete ',
               ),
@@ -91,7 +126,9 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
                       db.collection('lembretes').add({
                         'Lembrete': reminder.text,
                         'Descrição': description.text,
-                        'Data': date.text,
+                        'Data': _selectedDate != null
+                            ? Timestamp.fromDate(_selectedDate!)
+                            : null,
                       });
                     } else {
                       //ATUALIZA DOCUMENTO
@@ -101,7 +138,9 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
                           .update({
                             'Lembrete': reminder.text,
                             'Descrição': description.text,
-                            'Data': date.text,
+                            'Data': _selectedDate != null
+                                ? Timestamp.fromDate(_selectedDate!)
+                                : null,
                           });
                     }
                     Navigator.pop(context);

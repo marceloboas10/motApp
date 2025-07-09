@@ -65,7 +65,7 @@ class _RemindersPageState extends State<RemindersPage> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: reminders.orderBy('Lembrete').snapshots(),
+              stream: reminders.orderBy('Data').snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
