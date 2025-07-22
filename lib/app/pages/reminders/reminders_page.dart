@@ -59,13 +59,13 @@ class _RemindersPageState extends State<RemindersPage> {
             padding: EdgeInsetsGeometry.all(16),
             child: CupertinoSearchTextField(
               controller: _searchController,
-              placeholder: 'Buscar produto',
+              placeholder: 'Buscar lembrete',
               backgroundColor: Colors.white,
             ),
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: reminders.orderBy('Data').snapshots(),
+              stream: reminders.orderBy('Data', descending: true).snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:

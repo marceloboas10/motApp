@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:motapp/app/pages/financial/financial_page.dart';
 import 'package:motapp/app/pages/maintence_page.dart';
 import 'package:motapp/app/pages/home/menu_home_page.dart';
 import 'package:motapp/app/pages/registrations_page.dart';
-import 'package:motapp/app/pages/vehicles/vehicles_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     final List<Widget> pages = [
       MenuHomePage(),
       RegistrationsPage(),
-      VehiclesPage(),
+      FinancialPage(),
       MaintencePage(),
     ];
 
@@ -39,8 +39,8 @@ class _HomePageState extends State<HomePage> {
               label: 'Cadastros',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.two_wheeler_sharp),
-              label: 'Veículos',
+              icon: Icon(Icons.monetization_on_outlined),
+              label: 'Financeiro',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.two_wheeler_sharp),
