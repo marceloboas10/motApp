@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:motapp/app/viewmodels/customer_view_model.dart';
+import 'package:motapp/app/widgets/card_status_widget.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class StatusOperationalComponent extends StatelessWidget {
@@ -6,76 +9,77 @@ class StatusOperationalComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return ChangeNotifierProvider(
+      create: (_) => CustomerViewModel(),
+      child: Consumer<CustomerViewModel>(
+        builder: (context, viewModel, child) {
+          return StreamBuilder<Map<String, int>>(
+            stream: viewModel.getStatusOperacionalStream(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return _buildLoadingCards();
+              }
+
+              final status = snapshot.data!;
+              return _buildStatusCards(status);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildLoadingCards() {
+    return Center(
+      child: CircularProgressIndicator(color: LightColors.iconColorGreen),
+    );
+  }
+
+  Widget _buildStatusCards(Map<String, int> status) {
+    return Column(
       children: [
-        Expanded(
-          child: Card(
-            child: Container(
-              height: 80,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  FittedBox(
-                    child: Text(
-                      'Motos Alugadas',
-                      style: TextStyle(
-                        color: LightColors.gray,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '1',
-                    style: TextStyle(
-                      color: LightColors.buttonRed,
-                      fontSize: 23,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+        Row(
+          children: [
+            Expanded(
+              child: CardStatusWidget(
+                title: 'Total Clientes',
+                count: '${status['totalClientes']}',
+                icon: Icons.people,
+                colorIcon: Colors.blue,
               ),
             ),
-          ),
+            SizedBox(width: 8),
+            Expanded(
+              child: CardStatusWidget(
+                title: 'Motos Alugadas',
+                count: '${status['motosAlugadas']}',
+                icon: Icons.motorcycle,
+                colorIcon: Colors.orange,
+              ),
+            ),
+          ],
         ),
-        SizedBox(width: 6),
-        Expanded(
-          child: Card(
-            child: Container(
-              height: 80,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  FittedBox(
-                    child: Text(
-                      'Pagamentos Pendentes',
-                      style: TextStyle(
-                        color: LightColors.gray,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '1',
-                    style: TextStyle(
-                      color: LightColors.buttonRed,
-                      fontSize: 23,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: CardStatusWidget(
+                title: 'Motos Disponíveis',
+                count: '${status['motosDisponiveis']}',
+                icon: Icons.motorcycle_outlined,
+                colorIcon: LightColors.iconColorGreen,
               ),
             ),
-          ),
+            SizedBox(width: 8),
+            Expanded(
+              child: CardStatusWidget(
+                title: 'Pagamentos Pendentes',
+                count: '${status['pagamentosPendentes']}',
+                icon: Icons.warning,
+                colorIcon: LightColors.buttonRed,
+              ),
+            ),
+          ],
         ),
       ],
     );

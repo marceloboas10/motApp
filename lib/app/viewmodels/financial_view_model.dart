@@ -98,4 +98,37 @@ class FinancialViewModel extends ChangeNotifier {
       };
     });
   }
+
+  Stream<Map<String, double>> getTotaisMesCorrenteStream() {
+  final agora = DateTime.now();
+  final inicioMes = DateTime(agora.year, agora.month, 1);
+  final fimMes = DateTime(agora.year, agora.month + 1, 1);
+
+  return FirebaseFirestore.instance
+      .collection('transacoes')
+      .where('Data', isGreaterThanOrEqualTo: Timestamp.fromDate(inicioMes))
+      .where('Data', isLessThan: Timestamp.fromDate(fimMes))
+      .snapshots()
+      .map((snapshot) {
+    double totalEntradas = 0;
+    double totalSaidas = 0;
+
+    for (var doc in snapshot.docs) {
+      final tipo = doc['Tipo'];
+      final valor = doc['Valor'].toDouble();
+
+      if (tipo == 'entrada') {
+        totalEntradas += valor;
+      } else if (tipo == 'saida') {
+        totalSaidas += valor;
+      }
+    }
+
+    return {
+      'entradas': totalEntradas,
+      'saidas': totalSaidas,
+      'saldo': totalEntradas - totalSaidas,
+    };
+  });
+}
 }

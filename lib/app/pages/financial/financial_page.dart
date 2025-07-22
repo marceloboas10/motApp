@@ -49,23 +49,8 @@ class FinancialPage extends StatelessWidget {
                     stream: viewModel.getTotaisStream(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: CardFinancialWidget(
-                                title: 'Receita do Mês',
-                                price: 'Carregando...',
-                                colorPrice: LightColors.iconColorGreen,
-                              ),
-                            ),
-                            Expanded(
-                              child: CardFinancialWidget(
-                                title: 'Despesas do Mês',
-                                price: 'Carregando...',
-                                colorPrice: LightColors.buttonRed,
-                              ),
-                            ),
-                          ],
+                        return CircularProgressIndicator(
+                          color: LightColors.iconColorGreen,
                         );
                       }
 

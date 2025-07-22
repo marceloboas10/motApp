@@ -253,52 +253,90 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                     stream: FirebaseFirestore.instance
                         .collection('veiculos')
                         .snapshots(),
-                    builder: (context, snapshot) {
-                      List<DropdownMenuItem> placasVeiculos = [];
-                      if (!snapshot.hasData) {
-                        const CircularProgressIndicator();
-                      } else {
-                        final placas = snapshot.data?.docs.reversed.toList();
-                        placasVeiculos.add(
-                          const DropdownMenuItem(
-                            value: '0',
-                            child: Text('Nenhuma'),
-                          ),
-                        );
-                        for (var placa in placas!) {
-                          placasVeiculos.add(
-                            DropdownMenuItem(
-                              value: placa.get('Placa'),
-                              child: Text(placa['Placa']),
-                            ),
-                          );
-                        }
+                    builder: (context, snapshotVeiculos) {
+                      if (!snapshotVeiculos.hasData) {
+                        return Center(child: CircularProgressIndicator());
                       }
 
-                      return DropdownButtonFormField<dynamic>(
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: LightColors.iconColorGreen,
+                      return StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('clientes')
+                            .snapshots(),
+                        builder: (context, snapshotClientes) {
+                          List<DropdownMenuItem> placasVeiculos = [];
+
+                          if (!snapshotClientes.hasData) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+
+                          // Lista de placas já alugadas (exceto o cliente atual se estiver editando)
+                          List<String> placasAlugadas = [];
+                          for (var cliente in snapshotClientes.data!.docs) {
+                            final motoAlugada = cliente.get('Moto_Alugada');
+
+                            // Se não é o cliente atual (evita conflito na edição)
+                            if (widget.id == null ||
+                                cliente.id != widget.id.toString()) {
+                              if (motoAlugada != null &&
+                                  motoAlugada != '0' &&
+                                  motoAlugada.toString().isNotEmpty) {
+                                placasAlugadas.add(motoAlugada.toString());
+                              }
+                            }
+                          }
+
+                          // Adiciona opção "Nenhuma"
+                          placasVeiculos.add(
+                            const DropdownMenuItem(
+                              value: '0',
+                              child: Text('Nenhuma'),
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffe2e8f0)),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        dropdownColor: Colors.white,
-                        items: placasVeiculos,
-                        onChanged: (placaValue) {
-                          setState(() {
-                            placaSelecionadaTxt = placaValue;
-                          });
+                          );
+
+                          // Adiciona apenas motos disponíveis (não alugadas)
+                          final veiculos = snapshotVeiculos.data!.docs;
+                          for (var veiculo in veiculos) {
+                            final placa = veiculo.get('Placa');
+
+                            // Só adiciona se a moto não estiver alugada
+                            if (!placasAlugadas.contains(placa)) {
+                              placasVeiculos.add(
+                                DropdownMenuItem(
+                                  value: placa,
+                                  child: Text(placa),
+                                ),
+                              );
+                            }
+                          }
+
+                          return DropdownButtonFormField<dynamic>(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: LightColors.iconColorGreen,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffe2e8f0),
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            dropdownColor: Colors.white,
+                            items: placasVeiculos,
+                            onChanged: (placaValue) {
+                              setState(() {
+                                placaSelecionadaTxt = placaValue;
+                              });
+                            },
+                            value: placaSelecionadaTxt,
+                          );
                         },
-                        value: placaSelecionadaTxt,
                       );
                     },
                   ),
