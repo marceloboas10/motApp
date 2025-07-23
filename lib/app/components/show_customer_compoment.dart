@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/customer_model.dart';
 import 'package:motapp/app/pages/customers/register_customer_page.dart';
@@ -41,15 +42,83 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                   customer.celular,
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                trailing: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => RegisterCustomerPage(),
-                      settings: RouteSettings(arguments: customer.id),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              RegisterCustomerPage(),
+                          settings: RouteSettings(arguments: customer.id),
+                        ),
+                      ),
+                      child: Icon(Icons.edit_outlined, size: 30),
                     ),
-                  ),
-                  child: Icon(Icons.edit_outlined, size: 30),
+                    SizedBox(width: 8),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text(
+                              "Excluir Lembrete",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            content: Text(
+                              "Tem certeza que deseja excluir ${customer.nome}?",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  "Não",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Cliente ${customer.nome} excluído com sucesso!',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                  FirebaseFirestore.instance
+                                      .collection('clientes')
+                                      .doc(customer.id)
+                                      .delete();
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  "Sim",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.delete_outlined,
+                        size: 30,
+                        color: LightColors.buttonRed,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
@@ -57,7 +126,7 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                 child: Row(
                   children: [
                     Visibility(
-                      visible: customer.motoAlugada!.length > 2,
+                      visible: customer.motoAlugada.length > 1,
                       child: Container(
                         margin: EdgeInsets.only(left: 16, right: 24),
                         padding: EdgeInsets.all(6),

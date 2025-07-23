@@ -334,7 +334,12 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                                 placaSelecionadaTxt = placaValue;
                               });
                             },
-                            value: placaSelecionadaTxt,
+                            value:
+                                placasVeiculos.any(
+                                  (item) => item.value == placaSelecionadaTxt,
+                                )
+                                ? placaSelecionadaTxt
+                                : null,
                           );
                         },
                       );
@@ -377,6 +382,7 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                   var mensagemSnack = 'Formulário Incompleto';
                   var db = FirebaseFirestore.instance;
                   if (formValid) {
+                    placaSelecionadaTxt ??= '0';
                     if (widget.id == null) {
                       //ADICIONA UM NOVO DOCUMENTO
                       db.collection('clientes').add({

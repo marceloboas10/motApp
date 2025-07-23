@@ -12,7 +12,7 @@ class CustomerModel {
   late String? complemento;
   late String bairro;
   late String cidade;
-  late String? motoAlugada;
+  late String motoAlugada;
   late bool? pagamentoPendente;
 
   CustomerModel(
