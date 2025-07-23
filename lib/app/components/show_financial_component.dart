@@ -20,6 +20,7 @@ class ShowFinancialComponent extends StatelessWidget {
     }
 
     return Card(
+      color: Colors.white,
       margin: EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(

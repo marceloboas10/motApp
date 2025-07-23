@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:motapp/app/theme/light/light_colors.dart';
 
 class CustomTabSelectorWidget extends StatefulWidget {
   final Function(String)? onFilterChanged;
-  
+
   const CustomTabSelectorWidget({super.key, this.onFilterChanged});
 
   @override
-  State<CustomTabSelectorWidget> createState() => _CustomTabSelectorWidgetState();
+  State<CustomTabSelectorWidget> createState() =>
+      _CustomTabSelectorWidgetState();
 }
 
 class _CustomTabSelectorWidgetState extends State<CustomTabSelectorWidget> {
@@ -40,7 +42,7 @@ class _CustomTabSelectorWidgetState extends State<CustomTabSelectorWidget> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isAtivo ? Colors.teal : Colors.grey[200],
+            color: isAtivo ? Colors.teal : LightColors.lightGray,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(

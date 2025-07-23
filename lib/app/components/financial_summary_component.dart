@@ -31,8 +31,6 @@ class FinancialSummaryComponent extends StatelessWidget {
   }
 
   Widget _buildLoadingCards() {
-    final titleSuffix = showMonthOnly ? 'do Mês' : 'Total';
-
     return CircularProgressIndicator(color: LightColors.iconColorGreen);
   }
 
