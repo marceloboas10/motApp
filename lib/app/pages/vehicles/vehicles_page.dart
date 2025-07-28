@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_vehicle_component.dart';
 import 'package:motapp/app/pages/vehicles/register_vehicle_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -37,28 +38,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Veículos'),
-        centerTitle: true,
-        actionsPadding: EdgeInsets.only(right: 8),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterVehiclePage(),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.add_circle,
-              size: 40,
-              color: LightColors.iconColorGreen,
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBarComponent(title: 'Veículos', page: RegisterVehiclePage()),
       body: Column(
         children: [
           Padding(

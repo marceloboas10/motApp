@@ -83,17 +83,22 @@ class _ShowReminderComponentState extends State<ShowReminderComponent> {
                                 },
                                 child: const Text(
                                   "Não",
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: LightColors.buttonRed,
+                                  ),
                                 ),
                               ),
                               TextButton(
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      backgroundColor:
+                                          LightColors.iconColorGreen,
                                       content: Text(
                                         'Lembrete ${reminder.reminder} excluído com sucesso!',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -107,7 +112,10 @@ class _ShowReminderComponentState extends State<ShowReminderComponent> {
                                 },
                                 child: const Text(
                                   "Sim",
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: LightColors.iconColorGreen,
+                                  ),
                                 ),
                               ),
                             ],

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_product_component.dart';
 import 'package:motapp/app/pages/products/register_product_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -31,28 +32,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Produtos'),
-        actionsPadding: EdgeInsets.only(right: 8),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterProductPage(),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.add_circle,
-              size: 40,
-              color: LightColors.iconColorGreen,
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBarComponent(title: 'Produtos', page: RegisterProductPage()),
       body: Column(
         children: [
           Padding(

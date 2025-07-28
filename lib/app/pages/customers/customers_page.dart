@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_customer_compoment.dart';
 import 'package:motapp/app/pages/customers/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -37,28 +38,7 @@ class _CustomersPageState extends State<CustomersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Clientes'),
-        centerTitle: true,
-        actionsPadding: EdgeInsets.only(right: 8),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterCustomerPage(),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.add_circle,
-              size: 40,
-              color: LightColors.iconColorGreen,
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBarComponent(title: 'Clientes', page: RegisterCustomerPage()),
       body: Column(
         children: [
           Padding(

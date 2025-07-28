@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/pages/financial/register_financial_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,28 +17,7 @@ class FinancialPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => FinancialViewModel(),
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Financeiro'),
-          actionsPadding: EdgeInsets.only(right: 8),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => RegisterFinancialPage(),
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.add_circle,
-                size: 40,
-                color: LightColors.iconColorGreen,
-              ),
-            ),
-          ],
-        ),
+        appBar:AppBarComponent(title: 'Financeiro', page:  RegisterFinancialPage()),
         body: Padding(
           padding: const EdgeInsets.all(12),
           child: Consumer<FinancialViewModel>(

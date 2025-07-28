@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_reminder_component.dart';
 import 'package:motapp/app/pages/reminders/register_reminder_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -31,28 +32,7 @@ class _RemindersPageState extends State<RemindersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Lembretes'),
-        actionsPadding: EdgeInsets.only(right: 8),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => RegisterReminderPage(),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.add_circle,
-              size: 40,
-              color: LightColors.iconColorGreen,
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBarComponent(title: 'Lembretes', page: RegisterReminderPage()),
       body: Column(
         children: [
           Padding(
