@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_reminder_component.dart';
 import 'package:motapp/app/pages/reminders/register_reminder_page.dart';
-import 'package:motapp/app/theme/light/light_colors.dart';
 
 class RemindersPage extends StatefulWidget {
   const RemindersPage({super.key});

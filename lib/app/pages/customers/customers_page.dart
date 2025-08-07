@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_customer_compoment.dart';
 import 'package:motapp/app/pages/customers/register_customer_page.dart';
-import 'package:motapp/app/theme/light/light_colors.dart';
 
 class CustomersPage extends StatefulWidget {
   const CustomersPage({super.key});

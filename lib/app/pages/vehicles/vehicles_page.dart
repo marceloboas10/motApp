@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_vehicle_component.dart';
 import 'package:motapp/app/pages/vehicles/register_vehicle_page.dart';
-import 'package:motapp/app/theme/light/light_colors.dart';
 
 class VehiclesPage extends StatefulWidget {
   const VehiclesPage({super.key});

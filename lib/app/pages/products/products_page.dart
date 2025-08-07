@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_product_component.dart';
 import 'package:motapp/app/pages/products/register_product_page.dart';
-import 'package:motapp/app/theme/light/light_colors.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
