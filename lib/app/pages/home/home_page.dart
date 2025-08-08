@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/pages/financial/financial_page.dart';
-import 'package:motapp/app/pages/maitntence/maintence_page.dart';
+import 'package:motapp/app/pages/maitntence/maintenance_page.dart';
 import 'package:motapp/app/pages/home/menu_home_page.dart';
 import 'package:motapp/app/pages/registrations/registrations_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
       MenuHomePage(),
       RegistrationsPage(),
       FinancialPage(),
-      MaintencePage(),
+      MaintenancePage(),
     ];
 
     return SafeArea(

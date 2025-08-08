@@ -66,26 +66,33 @@ class MenuHomePage extends StatelessWidget {
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('lembretes')
+                        .orderBy('Data')
                         .snapshots(),
                     builder: (context, snapshot) {
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
+                      final fiveDayLater = today.add(Duration(days: 6));
+                      final docs = snapshot.data?.docs.where((doc) {
+                        final ts = doc['Data'] as Timestamp;
+                        final vencimento = ts.toDate();
+                        final vencimentoDate = DateTime(
+                          vencimento.year,
+                          vencimento.month,
+                          vencimento.day,
+                        );
+                        return vencimentoDate.isAtSameMomentAs(today) ||
+                            vencimentoDate.isAfter(today) ||
+                            vencimentoDate.isBefore(fiveDayLater);
+                      }).toList();
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.data!.docs.isEmpty) {
+                      } else if (snapshot.data!.docs.isEmpty || docs!.isEmpty) {
                         return Container(
                           alignment: Alignment.center,
-                          padding: EdgeInsets.only(top: 80),
+                          padding: EdgeInsets.only(top: 40),
                           child: Text('Nenhum lembrete cadastrado!'),
                         );
                       }
-                      final now = DateTime.now();
-                      final fiveDaysFromNow = now.add(Duration(days: 5));
-                      final docs = snapshot.data!.docs.where((doc) {
-                        final ts =
-                            doc['Data'] as Timestamp; // Atualize se necessário
-                        final vencimento = ts.toDate();
-                        return vencimento.isAfter(now) &&
-                            vencimento.isBefore(fiveDaysFromNow);
-                      }).toList();
                       return Column(
                         children: docs
                             .map(

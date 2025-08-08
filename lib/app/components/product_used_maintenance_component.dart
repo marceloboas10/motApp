@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class ProductUsedMaintenceComponent extends StatefulWidget {
-  const ProductUsedMaintenceComponent({
+class ProductUsedMaintenanceComponent extends StatefulWidget {
+  const ProductUsedMaintenanceComponent({
     super.key,
     required this.searchController,
     required this.onProductsChanged,
@@ -13,12 +13,12 @@ class ProductUsedMaintenceComponent extends StatefulWidget {
   final Function(List<Map<String, dynamic>>) onProductsChanged;
 
   @override
-  State<ProductUsedMaintenceComponent> createState() =>
+  State<ProductUsedMaintenanceComponent> createState() =>
       _ProductUsedMaintenceComponentState();
 }
 
 class _ProductUsedMaintenceComponentState
-    extends State<ProductUsedMaintenceComponent> {
+    extends State<ProductUsedMaintenanceComponent> {
   String searchText = '';
   List<Map<String, dynamic>> productSelected = [];
 
@@ -39,9 +39,9 @@ class _ProductUsedMaintenceComponentState
     setState(() {
       productSelected.add({
         'id': id,
-        'nome': nome,
-        'quantidade': 1,
-        'estoque': estoque,
+        'Produto': nome,
+        'Quantidade': estoque.toString(),
+        'quantidade': 0,
       });
     });
 

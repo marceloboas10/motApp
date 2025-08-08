@@ -44,7 +44,7 @@ class StatusOperationalComponent extends StatelessWidget {
               child: CardStatusWidget(
                 title: 'Total Clientes',
                 count: '${status['totalClientes']}',
-                icon: Icons.people,
+                icon: Icons.people_alt_rounded,
                 colorIcon: Colors.blue,
               ),
             ),
@@ -53,7 +53,7 @@ class StatusOperationalComponent extends StatelessWidget {
               child: CardStatusWidget(
                 title: 'Motos Alugadas',
                 count: '${status['motosAlugadas']}',
-                icon: Icons.motorcycle,
+                icon: Icons.motorcycle_outlined,
                 colorIcon: Colors.orange,
               ),
             ),

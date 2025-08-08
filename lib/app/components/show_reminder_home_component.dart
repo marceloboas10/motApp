@@ -14,7 +14,28 @@ class ShowReminderHomeComponent extends StatefulWidget {
       _ShowReminderHomeComponentState();
 }
 
-class _ShowReminderHomeComponentState extends State<ShowReminderHomeComponent> {
+class _ShowReminderHomeComponentState extends State<ShowReminderHomeComponent>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    )..repeat(reverse: true); // Repeats the animation back and forth
+
+    _animation = Tween<double>(begin: 1.0, end: 1.8).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     ReminderModel reminder = ReminderModel.froJson(
@@ -29,6 +50,24 @@ class _ShowReminderHomeComponentState extends State<ShowReminderHomeComponent> {
       date = null;
     }
 
+    bool isExpireToday = false;
+    if (date != null) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final vencimentoDate = DateTime(date.year, date.month, date.day);
+
+      isExpireToday = today.isAtSameMomentAs(vencimentoDate);
+    }
+
+    bool isLater = false;
+    if (date != null) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final vencimentoDate = DateTime(date.year, date.month, date.day);
+
+      isLater = today.isBefore(vencimentoDate);
+    }
+
     return Card(
       color: Colors.white,
       child: SizedBox(
@@ -36,11 +75,29 @@ class _ShowReminderHomeComponentState extends State<ShowReminderHomeComponent> {
           children: [
             Padding(padding: const EdgeInsets.only(right: 70)),
             ListTile(
-              leading: Icon(
-                Icons.notifications_rounded,
-                color: Colors.amber,
-                size: 30,
-              ),
+              leading: isExpireToday
+                  ? ScaleTransition(
+                      scale: _animation,
+                      child: Icon(
+                        Icons.notifications_rounded,
+                        color: Colors.amber,
+                        size: 30,
+                      ),
+                    )
+                  : isLater
+                  ? Icon(
+                      Icons.notifications_rounded,
+                      color: Colors.amber,
+                      size: 30,
+                    )
+                  : ScaleTransition(
+                      scale: _animation,
+                      child: Icon(
+                        Icons.notifications_rounded,
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    ),
               title: Text(
                 reminder.reminder,
                 style: TextStyle(fontWeight: FontWeight.w500),

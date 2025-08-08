@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class DropdownVehicleMaintenceComponent extends StatefulWidget {
-  DropdownVehicleMaintenceComponent({super.key, this.vehicleSelected});
+class DropdownVehicleMaintenanceComponent extends StatefulWidget {
+  DropdownVehicleMaintenanceComponent({super.key, this.vehicleSelected});
   
   String? vehicleSelected;
 
   @override
-  State<DropdownVehicleMaintenceComponent> createState() =>
+  State<DropdownVehicleMaintenanceComponent> createState() =>
       _DropdownVehicleMaintenceComponentState();
 }
 
 class _DropdownVehicleMaintenceComponentState
-    extends State<DropdownVehicleMaintenceComponent> {
+    extends State<DropdownVehicleMaintenanceComponent> {
   @override
   Widget build(BuildContext context) {
     return Column(

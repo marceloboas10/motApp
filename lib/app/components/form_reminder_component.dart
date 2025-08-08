@@ -89,7 +89,7 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
                   final picked = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
+                    firstDate: DateTime(2025),
                     lastDate: DateTime(2100),
                   );
                   if (picked != null) {
