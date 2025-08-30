@@ -334,7 +334,7 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                                 placaSelecionadaTxt = placaValue;
                               });
                             },
-                            value:
+                            initialValue:
                                 placasVeiculos.any(
                                   (item) => item.value == placaSelecionadaTxt,
                                 )
@@ -355,7 +355,7 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                     inactiveThumbColor: Colors.white,
                     inactiveTrackColor: LightColors.lightGray,
                     activeTrackColor: LightColors.buttonRed,
-                    activeColor: Colors.white,
+                    thumbColor: WidgetStatePropertyAll(Colors.white),
                     value: pagamentoPendenteTxt,
                     onChanged: (value) {
                       setState(() {

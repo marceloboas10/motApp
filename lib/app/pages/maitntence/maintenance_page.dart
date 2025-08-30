@@ -68,7 +68,16 @@ class _MaintencePageState extends State<MaintenancePage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (productsSelected.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterMaintencePage(),
+                        ),
+                      );
+                    }
+                  },
                   style: ButtonStyle(
                     fixedSize: WidgetStatePropertyAll(Size.fromHeight(50)),
                     shape: WidgetStatePropertyAll(

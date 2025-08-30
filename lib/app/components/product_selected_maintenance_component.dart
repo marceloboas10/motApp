@@ -61,7 +61,7 @@ class _ProductSelectedMaintenceComponentState
       children: [
         Text(
           'Itens Adicionados ao Serviço',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 8),
         Container(

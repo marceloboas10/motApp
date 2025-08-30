@@ -33,7 +33,7 @@ class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             Icon(Icons.notifications_rounded, color: Colors.amber),
             CircleAvatar(
               backgroundColor: LightColors.iconColorGreen,
-              child: Text('U', style: TextStyle(color: Colors.white)),
+              child: Text('M', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

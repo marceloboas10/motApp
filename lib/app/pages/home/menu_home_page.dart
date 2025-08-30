@@ -17,7 +17,7 @@ class MenuHomePage extends StatelessWidget {
       child: SafeArea(
         child: Scaffold(
           appBar: HomeAppBarWidget(
-            title: 'Olá, Usuário',
+            title: 'Olá, Marcelo',
             subtitle: 'Este é o seu painel de controle',
           ),
           body: Padding(

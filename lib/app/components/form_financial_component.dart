@@ -97,7 +97,7 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
                         selectedType = typeSelected;
                       });
                     },
-                    value: selectedType,
+                    initialValue: selectedType,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Selecione um tipo de pagamento';
@@ -124,7 +124,7 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
                   ),
                   SizedBox(height: 12),
                   FormFieldWidget(
-                    nameLabel: 'Data de Vencimento',
+                    nameLabel: 'Data da transação',
                     nameField: _dateController,
                     onTap: () async {
                       final picked = await showDatePicker(

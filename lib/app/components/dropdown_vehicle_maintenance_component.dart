@@ -64,7 +64,7 @@ class _DropdownVehicleMaintenceComponentState
               ),
               dropdownColor: Colors.white,
               items: vehicles,
-              value: widget.vehicleSelected,
+              initialValue: widget.vehicleSelected,
               onChanged: (value) {
                 setState(() {
                   widget.vehicleSelected = value;

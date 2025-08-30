@@ -18,7 +18,7 @@ class _MaintenanceHistoryComponentState
       children: [
         Text(
           'Histórico de Manutenção',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 8),
 

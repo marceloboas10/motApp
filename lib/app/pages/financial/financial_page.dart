@@ -17,7 +17,10 @@ class FinancialPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => FinancialViewModel(),
       child: Scaffold(
-        appBar:AppBarComponent(title: 'Financeiro', page:  RegisterFinancialPage()),
+        appBar: AppBarComponent(
+          title: 'Financeiro',
+          page: RegisterFinancialPage(),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(12),
           child: Consumer<FinancialViewModel>(
@@ -39,7 +42,7 @@ class FinancialPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: CardFinancialWidget(
-                              title: 'Receita do Mês',
+                              title: 'Receita Total',
                               price:
                                   'R\$ ${totais['entradas']!.toStringAsFixed(2)}',
                               colorPrice: LightColors.iconColorGreen,
@@ -47,7 +50,7 @@ class FinancialPage extends StatelessWidget {
                           ),
                           Expanded(
                             child: CardFinancialWidget(
-                              title: 'Despesas do Mês',
+                              title: 'Despesas Totais',
                               price:
                                   'R\$ ${totais['saidas']!.toStringAsFixed(2)}',
                               colorPrice: LightColors.buttonRed,
