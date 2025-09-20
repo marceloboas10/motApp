@@ -7,6 +7,7 @@ class FormFieldWidget extends StatelessWidget {
     super.key,
     required this.nameLabel,
     required this.nameField,
+    this.hintText,
     this.maxLine,
     this.keyboardType,
     required this.inputFormatter,
@@ -19,6 +20,7 @@ class FormFieldWidget extends StatelessWidget {
   final String nameLabel;
   final TextEditingController nameField;
   final int? maxLine;
+  final String? hintText;
   final TextInputType? keyboardType;
   final TextInputFormatter inputFormatter;
   final String? message;
@@ -50,8 +52,10 @@ class FormFieldWidget extends StatelessWidget {
             },
             controller: nameField,
             maxLines: maxLine,
+
             style: TextStyle(color: Colors.black, fontSize: 18),
             decoration: InputDecoration(
+              hintText: hintText,
               border: OutlineInputBorder(borderSide: BorderSide.none),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

@@ -1,12 +1,22 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:motapp/app/model/customer_model.dart';
 import 'package:motapp/app/pages/customers/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class ShowCustomerCompoment extends StatefulWidget {
-  const ShowCustomerCompoment({super.key, required this.snapshot});
+  const ShowCustomerCompoment({
+    super.key,
+    required this.snapshot,
+    required this.function,
+    required this.fileImage,
+  });
   final dynamic snapshot;
+  final VoidCallback function;
+  final File? fileImage;
 
   @override
   State<ShowCustomerCompoment> createState() => _ShowCustomerCompomentState();
@@ -28,11 +38,30 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
           child: Column(
             children: [
               ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(
-                    'https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1',
-                  ),
+                contentPadding: EdgeInsets.all(16),
+                leading: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: widget.fileImage == null
+                          ? NetworkImage(
+                              'https://i.pinimg.com/474x/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg',
+                            )
+                          : FileImage(widget.fileImage!),
+                    ),
+                    Positioned(
+                      top: 27,
+                      left: 27,
+                      child: IconButton(
+                        onPressed: widget.function,
+                        icon: Icon(
+                          Icons.camera_alt_rounded,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 title: Text(
                   customer.nome,

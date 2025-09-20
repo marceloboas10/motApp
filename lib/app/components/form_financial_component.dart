@@ -125,6 +125,7 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
                   SizedBox(height: 12),
                   FormFieldWidget(
                     nameLabel: 'Data da transação',
+                    hintText: 'dd/ mm / aaaa',
                     nameField: _dateController,
                     onTap: () async {
                       final picked = await showDatePicker(

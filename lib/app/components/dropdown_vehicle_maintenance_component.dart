@@ -4,7 +4,7 @@ import 'package:motapp/app/theme/light/light_colors.dart';
 
 class DropdownVehicleMaintenanceComponent extends StatefulWidget {
   DropdownVehicleMaintenanceComponent({super.key, this.vehicleSelected});
-  
+
   String? vehicleSelected;
 
   @override

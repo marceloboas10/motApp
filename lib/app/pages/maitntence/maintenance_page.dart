@@ -41,6 +41,7 @@ class _MaintencePageState extends State<MaintenancePage> {
               DropdownVehicleMaintenanceComponent(
                 vehicleSelected: vehicleSelected,
               ),
+
               SizedBox(height: 8),
               ProductUsedMaintenanceComponent(
                 searchController: searchController,
@@ -69,7 +70,11 @@ class _MaintencePageState extends State<MaintenancePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (productsSelected.isNotEmpty) {
+                    setState(() {
+                      vehicleSelected;
+                    });
+                    if (productsSelected.isNotEmpty &&
+                        vehicleSelected != 'Nenhum') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

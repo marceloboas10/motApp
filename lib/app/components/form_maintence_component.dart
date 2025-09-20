@@ -35,6 +35,7 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
             children: [
               FormFieldWidget(
                 nameLabel: 'Nome do Serviço',
+                hintText: 'Ex: Troca de óleo e filtro',
                 nameField: serviceName,
                 inputFormatter: FilteringTextInputFormatter.singleLineFormatter,
                 message: 'Preencha o lembrete ',
@@ -43,6 +44,7 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
               SizedBox(height: 12),
               FormFieldWidget(
                 nameLabel: 'Data de Vencimento',
+                hintText: 'dd/ mm / aaaa',
                 nameField: _dateController,
                 onTap: () async {
                   final picked = await showDatePicker(

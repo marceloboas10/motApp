@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/show_customer_compoment.dart';
 import 'package:motapp/app/pages/customers/register_customer_page.dart';
@@ -17,6 +20,19 @@ class _CustomersPageState extends State<CustomersPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
 
+  final imagePicker = ImagePicker();
+  File? imageFile;
+
+  pick(ImageSource source) async {
+    final pickedFile = await imagePicker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +48,67 @@ class _CustomersPageState extends State<CustomersPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _showOptionBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsetsGeometry.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: Icon(Icons.image, color: Colors.grey[500]),
+                ),
+                title: Text(
+                  'Galeria',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  pick(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: Icon(Icons.camera_alt, color: Colors.grey[500]),
+                ),
+                title: Text(
+                  'Câmera',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+
+                  pick(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: Icon(Icons.delete, color: Colors.grey[500]),
+                ),
+                title: Text(
+                  'Remover',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    imageFile = null;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -72,8 +149,11 @@ class _CustomersPageState extends State<CustomersPage> {
                           }).toList();
                     return ListView.builder(
                       itemCount: filteredDocs.length,
-                      itemBuilder: (context, index) =>
-                          ShowCustomerCompoment(snapshot: filteredDocs[index]),
+                      itemBuilder: (context, index) => ShowCustomerCompoment(
+                        snapshot: filteredDocs[index],
+                        function: _showOptionBottomSheet,
+                        fileImage: imageFile,
+                      ),
                     );
                 }
               },

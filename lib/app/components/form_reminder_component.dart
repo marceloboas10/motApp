@@ -84,6 +84,7 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
               SizedBox(height: 12),
               FormFieldWidget(
                 nameLabel: 'Data de Vencimento',
+                hintText: 'dd/ mm / aaaa',
                 nameField: _dateController,
                 onTap: () async {
                   final picked = await showDatePicker(
