@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
@@ -20,7 +21,11 @@ class _VehiclesPageState extends State<VehiclesPage> {
   @override
   void initState() {
     super.initState();
-    vehicle = FirebaseFirestore.instance.collection('veiculos');
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+    vehicle = FirebaseFirestore.instance.collection('usuarios').doc(userId).collection('veiculos');
+      
+    }
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -118,11 +119,27 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                   onPressed: () {
                     var formValid = _formKey.currentState?.validate() ?? false;
                     var mensagemSnack = 'Formulário Incompleto';
-                    var db = FirebaseFirestore.instance;
+                    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+                    if (userId == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: LightColors.buttonRed,
+                          content: Text('Usuário não autenticado.'),
+                        ),
+                      );
+                      return;
+                    }
+
+                    var db = FirebaseFirestore.instance
+                        .collection('usuarios')
+                        .doc(userId)
+                        .collection('veiculos');
+
                     if (formValid) {
                       if (widget.id == null) {
                         //ADICIONA UM NOVO DOCUMENTO
-                        db.collection('veiculos').add({
+                        db.add({
                           'Ano': yearVehicleTxt.text,
                           'Cor': colorVehicleTxt.text,
                           'Fabricante': manufacturerVehicleTxt.text,
@@ -132,17 +149,14 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
                         });
                       } else {
                         //ATUALIZA DOCUMENTO
-                        db
-                            .collection('veiculos')
-                            .doc(widget.id.toString())
-                            .update({
-                              'Ano': yearVehicleTxt.text,
-                              'Cor': colorVehicleTxt.text,
-                              'Fabricante': manufacturerVehicleTxt.text,
-                              'Modelo': modelVehicleTxt.text,
-                              'Placa': plateVehicleTxt.text,
-                              'Renavam': renavamVehicleTxt.text,
-                            });
+                        db.doc(widget.id.toString()).update({
+                          'Ano': yearVehicleTxt.text,
+                          'Cor': colorVehicleTxt.text,
+                          'Fabricante': manufacturerVehicleTxt.text,
+                          'Modelo': modelVehicleTxt.text,
+                          'Placa': plateVehicleTxt.text,
+                          'Renavam': renavamVehicleTxt.text,
+                        });
                       }
                       Navigator.pop(context);
                     } else {

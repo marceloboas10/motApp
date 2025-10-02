@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:motapp/app/model/customer_model.dart';
 import 'package:motapp/app/pages/customers/register_customer_page.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -115,21 +115,35 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Cliente ${customer.nome} excluído com sucesso!',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                  final userId =
+                                      FirebaseAuth.instance.currentUser?.uid;
+                                  if (userId != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Cliente ${customer.nome} excluído com sucesso!',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                  FirebaseFirestore.instance
-                                      .collection('clientes')
-                                      .doc(customer.id)
-                                      .delete();
+                                    );
+                                    FirebaseFirestore.instance
+                                        .collection('usuarios')
+                                        .doc(userId)
+                                        .collection('clientes')
+                                        .doc(customer.id)
+                                        .delete();
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Erro: Usuário não autenticado.',
+                                        ),
+                                      ),
+                                    );
+                                  }
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text(
