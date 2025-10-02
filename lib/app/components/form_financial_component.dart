@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +30,12 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
   ];
 
   void getDocumentById(String id) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
     await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
         .collection('transacoes')
         .doc(id)
         .get()
@@ -163,7 +169,21 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
                 onPressed: () {
                   var formValid = _formKey.currentState?.validate() ?? false;
                   var mensagemSnack = 'Formulário Incompleto';
-                  var db = FirebaseFirestore.instance;
+                  final userId = FirebaseAuth.instance.currentUser?.uid;
+                  if (userId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LightColors.buttonRed,
+                        content: Text('Usuário não autenticado.'),
+                      ),
+                    );
+                    return;
+                  }
+                  var db = FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .doc(userId)
+                      .collection('transacoes');
+
                   double? valor;
                   try {
                     valor = double.parse(
@@ -182,7 +202,7 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
                   if (formValid) {
                     if (widget.id == null) {
                       //ADICIONA UM NOVO DOCUMENTO
-                      db.collection('transacoes').add({
+                      db.add({
                         'Tipo': selectedType,
                         'Descrição': descriptionTxt.text,
                         'Valor': valor,
@@ -192,17 +212,14 @@ class _FormFinancialComponentState extends State<FormFinancialComponent> {
                       });
                     } else {
                       //ATUALIZA DOCUMENTO
-                      db
-                          .collection('transacoes')
-                          .doc(widget.id.toString())
-                          .update({
-                            'Tipo': selectedType,
-                            'Descrição': descriptionTxt.text,
-                            'Valor': valor,
-                            'Data': _selectedDate != null
-                                ? Timestamp.fromDate(_selectedDate!)
-                                : Timestamp.fromDate(DateTime.now()),
-                          });
+                      db.doc(widget.id.toString()).update({
+                        'Tipo': selectedType,
+                        'Descrição': descriptionTxt.text,
+                        'Valor': valor,
+                        'Data': _selectedDate != null
+                            ? Timestamp.fromDate(_selectedDate!)
+                            : Timestamp.fromDate(DateTime.now()),
+                      });
                     }
                     Navigator.pop(context);
                   } else {

@@ -8,23 +8,51 @@ import 'package:motapp/app/components/status_operational_component.dart';
 import 'package:motapp/app/widgets/home_app_bar_widget.dart';
 import 'package:motapp/app/viewmodels/financial_view_model.dart'; // Adicione este import
 
-class MenuHomePage extends StatelessWidget {
+class MenuHomePage extends StatefulWidget {
   const MenuHomePage({super.key});
+
+  @override
+  State<MenuHomePage> createState() => _MenuHomePageState();
+}
+
+class _MenuHomePageState extends State<MenuHomePage> {
+  String userName = 'Olá';
+
+  @override
+  void initState() {
+    super.initState();
+    // 3. Chame o método para buscar os dados ao iniciar a tela
+    _loadUserData();
+  }
+
+  // 4. Crie o método para buscar o nome no Firestore
+  Future<void> _loadUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .get();
+
+      if (docSnapshot.exists && docSnapshot.data() != null) {
+        setState(() {
+          // Atualiza a variável com o nome do usuário
+          userName = 'Olá, ${docSnapshot.data()!['nome']}';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    final userName = FirebaseFirestore.instance
-        .collection('usuarios')
-        .doc(userId)
-        .firestore
-        .app;
+
     return ChangeNotifierProvider(
       create: (_) => FinancialViewModel(),
       child: SafeArea(
         child: Scaffold(
           appBar: HomeAppBarWidget(
-            title: 'Olá, $userName',
+            title: userName,
             subtitle: 'Este é o seu painel de controle',
           ),
           body: Padding(

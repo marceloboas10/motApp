@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FinancialViewModel extends ChangeNotifier {
@@ -13,6 +14,15 @@ class FinancialViewModel extends ChangeNotifier {
   void setFiltro(String filtro) {
     _filtroAtivo = filtro;
     notifyListeners();
+  }
+
+  CollectionReference? get _transacoesCollection {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return null;
+    return FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('transacoes');
   }
 
   // Stream que retorna as transações filtradas
@@ -74,15 +84,18 @@ class FinancialViewModel extends ChangeNotifier {
 
   // Para atualização em tempo real dos totais
   Stream<Map<String, double>> getTotaisStream() {
-    return FirebaseFirestore.instance.collection('transacoes').snapshots().map((
-      snapshot,
-    ) {
+    final collection = _transacoesCollection;
+    if (collection == null) {
+      return Stream.value({'entradas': 0, 'saidas': 0, 'saldo': 0});
+    }
+
+    return collection.snapshots().map((snapshot) {
       double totalEntradas = 0;
       double totalSaidas = 0;
 
       for (var doc in snapshot.docs) {
         final tipo = doc['Tipo'];
-        final valor = doc['Valor'].toDouble();
+        final valor = (doc['Valor'] as num).toDouble();
 
         if (tipo == 'entrada') {
           totalEntradas += valor;
@@ -100,35 +113,45 @@ class FinancialViewModel extends ChangeNotifier {
   }
 
   Stream<Map<String, double>> getTotaisMesCorrenteStream() {
-  final agora = DateTime.now();
-  final inicioMes = DateTime(agora.year, agora.month, 1);
-  final fimMes = DateTime(agora.year, agora.month + 1, 1);
+    final collection = _transacoesCollection;
+    if (collection == null)
+      return Stream.value({'entradas': 0, 'saidas': 0, 'saldo': 0});
 
-  return FirebaseFirestore.instance
-      .collection('transacoes')
-      .where('Data', isGreaterThanOrEqualTo: Timestamp.fromDate(inicioMes))
-      .where('Data', isLessThan: Timestamp.fromDate(fimMes))
-      .snapshots()
-      .map((snapshot) {
-    double totalEntradas = 0;
-    double totalSaidas = 0;
+    final agora = DateTime.now();
+    final inicioMes = DateTime(agora.year, agora.month, 1);
+    final fimMes = DateTime(
+      agora.year,
+      agora.month + 1,
+      0,
+    ); // Corrigido para pegar o último dia do mês
 
-    for (var doc in snapshot.docs) {
-      final tipo = doc['Tipo'];
-      final valor = doc['Valor'].toDouble();
+    return collection
+        .where('Data', isGreaterThanOrEqualTo: Timestamp.fromDate(inicioMes))
+        .where(
+          'Data',
+          isLessThanOrEqualTo: Timestamp.fromDate(fimMes),
+        ) // Corrigido para ser inclusivo
+        .snapshots()
+        .map((snapshot) {
+          double totalEntradas = 0;
+          double totalSaidas = 0;
 
-      if (tipo == 'entrada') {
-        totalEntradas += valor;
-      } else if (tipo == 'saida') {
-        totalSaidas += valor;
-      }
-    }
+          for (var doc in snapshot.docs) {
+            final tipo = doc['Tipo'];
+            final valor = (doc['Valor'] as num).toDouble();
 
-    return {
-      'entradas': totalEntradas,
-      'saidas': totalSaidas,
-      'saldo': totalEntradas - totalSaidas,
-    };
-  });
-}
+            if (tipo == 'entrada') {
+              totalEntradas += valor;
+            } else if (tipo == 'saida') {
+              totalSaidas += valor;
+            }
+          }
+
+          return {
+            'entradas': totalEntradas,
+            'saidas': totalSaidas,
+            'saldo': totalEntradas - totalSaidas,
+          };
+        });
+  }
 }
