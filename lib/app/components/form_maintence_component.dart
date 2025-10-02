@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +8,10 @@ import 'package:motapp/app/theme/light/light_colors.dart';
 import 'package:motapp/app/widgets/form_field_widget.dart';
 
 class FormMaintenceComponent extends StatefulWidget {
-  const FormMaintenceComponent({super.key});
+  const FormMaintenceComponent({super.key, this.vehicleId, this.productsUsed});
+
+  final String? vehicleId;
+  final List<Map<String, dynamic>>? productsUsed;
 
   @override
   State<FormMaintenceComponent> createState() => _FormMaintenceComponentState();
@@ -17,6 +21,7 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController serviceName = TextEditingController();
   final TextEditingController totalCoast = TextEditingController();
+  final TextEditingController date = TextEditingController();
   final TextEditingController observation = TextEditingController();
   final _dateController = TextEditingController();
 
@@ -87,12 +92,21 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
                 onPressed: () {
                   var formValid = _formKey.currentState?.validate() ?? false;
                   var mensagemSnack = 'Formulário Incompleto';
-                  var db = FirebaseFirestore.instance;
+                  final userId = FirebaseAuth.instance.currentUser?.uid;
+                  if (userId == null) {
+                    return;
+                  }
+
+                  var db = FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .doc(userId)
+                      .collection('manutencoes');
                   if (formValid) {
                     //ADICIONA UM NOVO DOCUMENTO
-                    db.collection('lembretes').add({
-                      'Lembrete': serviceName.text,
+                    db.add({
+                      'Serviço': serviceName.text,
                       'Descrição': observation.text,
+                      'Data': date.text,
                     });
                     Navigator.pop(context);
                   } else {

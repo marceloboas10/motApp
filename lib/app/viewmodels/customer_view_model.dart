@@ -14,7 +14,7 @@ class CustomerViewModel extends ChangeNotifier {
   // Stream para status operacional em tempo real
   Stream<Map<String, int>> getStatusOperacionalStream() {
     return FirebaseFirestore.instance
-        .collection('usuario')
+        .collection('usuarios')
         .doc(userId)
         .collection('clientes')
         .snapshots()

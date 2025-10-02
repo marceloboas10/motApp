@@ -21,11 +21,10 @@ class _MenuHomePageState extends State<MenuHomePage> {
   @override
   void initState() {
     super.initState();
-    // 3. Chame o método para buscar os dados ao iniciar a tela
     _loadUserData();
   }
 
-  // 4. Crie o método para buscar o nome no Firestore
+  
   Future<void> _loadUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -36,7 +35,6 @@ class _MenuHomePageState extends State<MenuHomePage> {
 
       if (docSnapshot.exists && docSnapshot.data() != null) {
         setState(() {
-          // Atualiza a variável com o nome do usuário
           userName = 'Olá, ${docSnapshot.data()!['nome']}';
         });
       }

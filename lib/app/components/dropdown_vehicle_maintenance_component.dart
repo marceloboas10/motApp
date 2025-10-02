@@ -15,9 +15,9 @@ class DropdownVehicleMaintenanceComponent extends StatefulWidget {
 
 class _DropdownVehicleMaintenceComponentState
     extends State<DropdownVehicleMaintenanceComponent> {
-  final userId = FirebaseAuth.instance.currentUser?.uid;
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

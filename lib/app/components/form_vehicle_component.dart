@@ -23,16 +23,21 @@ class _FormVehicleComponentState extends State<FormVehicleComponent> {
   final renavamVehicleTxt = TextEditingController();
 
   void getDocumentById(String id) async {
-    await FirebaseFirestore.instance.collection('veiculos').doc(id).get().then((
-      valor,
-    ) {
-      yearVehicleTxt.text = valor.get('Ano');
-      manufacturerVehicleTxt.text = valor.get('Fabricante');
-      modelVehicleTxt.text = valor.get('Modelo');
-      plateVehicleTxt.text = valor.get('Placa');
-      colorVehicleTxt.text = valor.get('Cor');
-      renavamVehicleTxt.text = valor.get('Renavam');
-    });
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('veiculos')
+        .doc(id)
+        .get()
+        .then((valor) {
+          yearVehicleTxt.text = valor.get('Ano');
+          manufacturerVehicleTxt.text = valor.get('Fabricante');
+          modelVehicleTxt.text = valor.get('Modelo');
+          plateVehicleTxt.text = valor.get('Placa');
+          colorVehicleTxt.text = valor.get('Cor');
+          renavamVehicleTxt.text = valor.get('Renavam');
+        });
   }
 
   @override

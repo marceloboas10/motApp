@@ -70,6 +70,33 @@ class _MaintencePageState extends State<MaintenancePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    if (productsSelected.isNotEmpty &&
+                        vehicleSelected != null &&
+                        vehicleSelected != '0') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterMaintencePage(),
+                          // Passe os dados como argumentos
+                          settings: RouteSettings(
+                            arguments: {
+                              'vehicleId': vehicleSelected,
+                              'products': productsSelected,
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: LightColors.buttonRed,
+                          content: Text(
+                            'Selecione um veículo e ao menos um produto.',
+                          ),
+                        ),
+                      );
+                    }
+
                     setState(() {
                       vehicleSelected;
                     });
@@ -105,7 +132,7 @@ class _MaintencePageState extends State<MaintenancePage> {
                 ),
               ),
               SizedBox(height: 50),
-              MaintenanceHistoryComponent(),
+              MaintenanceHistoryComponent(vehicleId: vehicleSelected),
             ],
           ),
         ),

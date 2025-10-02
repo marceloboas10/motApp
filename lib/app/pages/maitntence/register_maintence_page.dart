@@ -11,9 +11,11 @@ class RegisterMaintencePage extends StatefulWidget {
 class _RegisterMaintencePageState extends State<RegisterMaintencePage> {
   @override
   Widget build(BuildContext context) {
+     final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return Scaffold(
       appBar: AppBar(title: const Text('Finalizar Registro')),
-      body: FormMaintenceComponent(),
+      body: FormMaintenceComponent(vehicleId: arguments?['vehicleId'],
+        productsUsed: arguments?['products'],),
     );
   }
 }

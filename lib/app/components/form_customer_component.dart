@@ -33,29 +33,35 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
   String? placaSelecionadaTxt;
   bool pagamentoPendenteTxt = false;
   final CepResultService _cepResultService = CepResultService();
+  final userId = FirebaseAuth.instance.currentUser?.uid;
 
   void getDocumentById(String id) async {
-    await FirebaseFirestore.instance.collection('clientes').doc(id).get().then((
-      valor,
-    ) {
-      setState(() {
-        nameTxt.text = valor.get('Nome');
-        rgTxt.text = valor.get('RG');
-        cpfTxt.text = valor.get('CPF');
-        cellphoneTxt.text = valor.get('Celular');
-        cellphone2Txt.text = valor.get('Celular_2');
-        phoneTxt.text = valor.get('Telefone_Referencia');
-        validateChnTxt.text = valor.get('Validade_CNH');
-        cepTxt.text = valor.get('CEP');
-        streetTxt.text = valor.get('Endereço');
-        streetNumberTxt.text = valor.get('Numero_Residencia');
-        complementTxt.text = valor.get('Complemento');
-        districtTxt.text = valor.get('Bairro');
-        cityTxt.text = valor.get('Cidade');
-        placaSelecionadaTxt = valor.get('Moto_Alugada');
-        pagamentoPendenteTxt = valor.get('Pagamento_Pendente');
-      });
-    });
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('clientes')
+        .doc(id)
+        .get()
+        .then((valor) {
+          setState(() {
+            nameTxt.text = valor.get('Nome');
+            rgTxt.text = valor.get('RG');
+            cpfTxt.text = valor.get('CPF');
+            cellphoneTxt.text = valor.get('Celular');
+            cellphone2Txt.text = valor.get('Celular_2');
+            phoneTxt.text = valor.get('Telefone_Referencia');
+            validateChnTxt.text = valor.get('Validade_CNH');
+            cepTxt.text = valor.get('CEP');
+            streetTxt.text = valor.get('Endereço');
+            streetNumberTxt.text = valor.get('Numero_Residencia');
+            complementTxt.text = valor.get('Complemento');
+            districtTxt.text = valor.get('Bairro');
+            cityTxt.text = valor.get('Cidade');
+            placaSelecionadaTxt = valor.get('Moto_Alugada');
+            pagamentoPendenteTxt = valor.get('Pagamento_Pendente');
+          });
+        });
   }
 
   @override
@@ -252,6 +258,8 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                   Text('Moto Alugada'),
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
+                        .collection('usuarios')
+                        .doc(userId)
                         .collection('veiculos')
                         .snapshots(),
                     builder: (context, snapshotVeiculos) {
@@ -260,7 +268,7 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                       }
 
                       return StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
+                        stream: FirebaseFirestore.instance.collection('usuarios').doc(userId)
                             .collection('clientes')
                             .snapshots(),
                         builder: (context, snapshotClientes) {

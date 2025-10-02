@@ -43,11 +43,8 @@ class _CustomersPageState extends State<CustomersPage> {
           .collection('usuarios')
           .doc(userId)
           .collection('clientes');
-    }else{
+    } else {}
 
-    }
-
-  
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();
@@ -148,6 +145,9 @@ class _CustomersPageState extends State<CustomersPage> {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
+                    if (!snapshot.hasData) {
+                      return Center(child: Text('Não tem dados'));
+                    }
                     final dados = snapshot.requireData;
 
                     final filteredDocs = _searchText.isEmpty
