@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
@@ -20,7 +21,11 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
     super.initState();
-    products = FirebaseFirestore.instance.collection('produtos');
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+    products = FirebaseFirestore.instance.collection('usuarios').doc(userId).collection('produtos');
+      
+    }
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();

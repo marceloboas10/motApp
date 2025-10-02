@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/model/product_model.dart';
 import 'package:motapp/app/pages/products/register_product_page.dart';
@@ -82,21 +83,25 @@ class _ShowProductComponentState extends State<ShowProductComponent> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Produto ${product.product} excluído com sucesso!',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                  final userId =
+                                      FirebaseAuth.instance.currentUser?.uid;
+                                  if (userId != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Produto ${product.product} excluído com sucesso!',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
                                   FirebaseFirestore.instance
                                       .collection('produtos')
                                       .doc(product.id)
                                       .delete();
+                                  }
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text(

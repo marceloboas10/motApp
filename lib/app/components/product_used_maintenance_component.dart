@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -58,6 +59,7 @@ class _ProductUsedMaintenceComponentState
 
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,9 +88,13 @@ class _ProductUsedMaintenceComponentState
           decoration: BoxDecoration(),
           height: 160,
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('produtos')
-                .snapshots(),
+            stream: userId != null
+                ? FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .doc(userId)
+                      .collection('produtos')
+                      .snapshots()
+                : Stream.empty(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());

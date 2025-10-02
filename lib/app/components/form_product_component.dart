@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
@@ -18,12 +19,19 @@ class _FormProductComponentState extends State<FormProductComponent> {
   final TextEditingController amount = TextEditingController();
 
   void getDocumentById(String id) async {
-    await FirebaseFirestore.instance.collection('produtos').doc(id).get().then((
-      valor,
-    ) {
-      product.text = valor.get('Produto');
-      amount.text = valor.get('Quantidade').toString();
-    });
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(userId)
+          .collection('produtos')
+          .doc(id)
+          .get()
+          .then((valor) {
+            product.text = valor.get('Produto');
+            amount.text = valor.get('Quantidade').toString();
+          });
+    }
   }
 
   @override
@@ -72,23 +80,33 @@ class _FormProductComponentState extends State<FormProductComponent> {
                 onPressed: () {
                   var formValid = _formKey.currentState?.validate() ?? false;
                   var mensagemSnack = 'Formulário Incompleto';
-                  var db = FirebaseFirestore.instance;
+                  final userId = FirebaseAuth.instance.currentUser?.uid;
+                  if (userId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LightColors.buttonRed,
+                        content: Text('Usuário não autenticado.'),
+                      ),
+                    );
+                    return;
+                  }
+                  var db = FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .doc(userId)
+                      .collection('produtos');
                   if (formValid) {
                     if (widget.id == null) {
                       //ADICIONA UM NOVO DOCUMENTO
-                      db.collection('produtos').add({
+                      db.add({
                         'Produto': product.text,
                         'Quantidade': amount.text,
                       });
                     } else {
                       //ATUALIZA DOCUMENTO
-                      db
-                          .collection('produtos')
-                          .doc(widget.id.toString())
-                          .update({
-                            'Produto': product.text,
-                            'Quantidade': amount.text,
-                          });
+                      db.doc(widget.id.toString()).update({
+                        'Produto': product.text,
+                        'Quantidade': amount.text,
+                      });
                     }
                     Navigator.pop(context);
                   } else {
