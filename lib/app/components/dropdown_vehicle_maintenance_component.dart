@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
@@ -14,6 +15,7 @@ class DropdownVehicleMaintenanceComponent extends StatefulWidget {
 
 class _DropdownVehicleMaintenceComponentState
     extends State<DropdownVehicleMaintenanceComponent> {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,6 +28,8 @@ class _DropdownVehicleMaintenceComponentState
         SizedBox(height: 6),
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
+              .collection('usuarios')
+              .doc(userId)
               .collection('veiculos')
               .orderBy('Placa')
               .snapshots(),

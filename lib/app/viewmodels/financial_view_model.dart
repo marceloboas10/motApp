@@ -27,7 +27,11 @@ class FinancialViewModel extends ChangeNotifier {
 
   // Stream que retorna as transações filtradas
   Stream<QuerySnapshot> getTransacoesFiltradas() {
-    final collection = FirebaseFirestore.instance.collection('transacoes');
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final collection = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('transacoes');
 
     switch (_filtroAtivo) {
       case 'entradas':

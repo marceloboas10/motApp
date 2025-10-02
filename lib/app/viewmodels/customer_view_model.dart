@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CustomerViewModel extends ChangeNotifier {
@@ -8,9 +9,13 @@ class CustomerViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   Map<String, int>? get statusOperacional => _statusOperacional;
 
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+
   // Stream para status operacional em tempo real
   Stream<Map<String, int>> getStatusOperacionalStream() {
     return FirebaseFirestore.instance
+        .collection('usuario')
+        .doc(userId)
         .collection('clientes')
         .snapshots()
         .asyncMap((clientesSnapshot) async {
@@ -39,6 +44,8 @@ class CustomerViewModel extends ChangeNotifier {
 
           // Busca total de veículos
           final veiculosSnapshot = await FirebaseFirestore.instance
+              .collection('usuarios')
+              .doc(userId)
               .collection('veiculos')
               .get();
 
