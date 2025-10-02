@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +37,17 @@ class _CustomersPageState extends State<CustomersPage> {
   @override
   void initState() {
     super.initState();
-    customers = FirebaseFirestore.instance.collection('clientes');
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      customers = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(userId)
+          .collection('clientes');
+    }else{
+
+    }
+
+  
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();

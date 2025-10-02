@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motapp/app/core/shared/utils/mask_form_formatter.dart';
@@ -380,12 +381,26 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                 onPressed: () {
                   var formValid = _formKey.currentState?.validate() ?? false;
                   var mensagemSnack = 'Formulário Incompleto';
-                  var db = FirebaseFirestore.instance;
+
+                  final userId = FirebaseAuth.instance.currentUser?.uid;
+                  if (userId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LightColors.buttonRed,
+                        content: Text('Usuário não autenticado'),
+                      ),
+                    );
+                    return;
+                  }
+                  var db = FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .doc(userId)
+                      .collection('clientes');
                   if (formValid) {
                     placaSelecionadaTxt ??= '0';
                     if (widget.id == null) {
                       //ADICIONA UM NOVO DOCUMENTO
-                      db.collection('clientes').add({
+                      db.add({
                         'Nome': nameTxt.text,
                         'RG': rgTxt.text,
                         'CPF': cpfTxt.text,
@@ -404,26 +419,23 @@ class _FormCustomerComponentState extends State<FormCustomerComponent> {
                       });
                     } else {
                       //ATUALIZA DOCUMENTO
-                      db
-                          .collection('clientes')
-                          .doc(widget.id.toString())
-                          .update({
-                            'Nome': nameTxt.text,
-                            'RG': rgTxt.text,
-                            'CPF': cpfTxt.text,
-                            'Celular': cellphoneTxt.text,
-                            'Celular_2': cellphone2Txt.text,
-                            'Telefone_Residencial': phoneTxt.text,
-                            'Validade_CNH': validateChnTxt.text,
-                            'CEP': cepTxt.text,
-                            'Endereço': streetTxt.text,
-                            'Numero_Casa': streetNumberTxt.text,
-                            'Complemento': complementTxt.text,
-                            'Bairro': districtTxt.text,
-                            'Cidade': cityTxt.text,
-                            'Moto_Alugada': placaSelecionadaTxt,
-                            'Pagamento_Pendente': pagamentoPendenteTxt,
-                          });
+                      db.doc(widget.id.toString()).update({
+                        'Nome': nameTxt.text,
+                        'RG': rgTxt.text,
+                        'CPF': cpfTxt.text,
+                        'Celular': cellphoneTxt.text,
+                        'Celular_2': cellphone2Txt.text,
+                        'Telefone_Residencial': phoneTxt.text,
+                        'Validade_CNH': validateChnTxt.text,
+                        'CEP': cepTxt.text,
+                        'Endereço': streetTxt.text,
+                        'Numero_Casa': streetNumberTxt.text,
+                        'Complemento': complementTxt.text,
+                        'Bairro': districtTxt.text,
+                        'Cidade': cityTxt.text,
+                        'Moto_Alugada': placaSelecionadaTxt,
+                        'Pagamento_Pendente': pagamentoPendenteTxt,
+                      });
                     }
                     Navigator.pop(context);
                   } else {

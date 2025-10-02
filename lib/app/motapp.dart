@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motapp/app/pages/home/home_page.dart';
+import 'package:motapp/app/pages/login/login_page.dart';
 import 'package:motapp/app/theme/app_theme.dart';
 
 class Motapp extends StatelessWidget {
@@ -10,7 +11,7 @@ class Motapp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
