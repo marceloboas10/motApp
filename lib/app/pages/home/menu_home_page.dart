@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Adicione este import
 import 'package:motapp/app/components/financial_summary_component.dart';
@@ -12,12 +13,18 @@ class MenuHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final userName = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .firestore
+        .app;
     return ChangeNotifierProvider(
       create: (_) => FinancialViewModel(),
       child: SafeArea(
         child: Scaffold(
           appBar: HomeAppBarWidget(
-            title: 'Olá, Marcelo',
+            title: 'Olá, $userName',
             subtitle: 'Este é o seu painel de controle',
           ),
           body: Padding(
@@ -64,10 +71,14 @@ class MenuHomePage extends StatelessWidget {
                     ),
                   ),
                   StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('lembretes')
-                        .orderBy('Data')
-                        .snapshots(),
+                    stream: userId != null
+                        ? FirebaseFirestore.instance
+                              .collection('usuarios')
+                              .doc(userId)
+                              .collection('lembretes')
+                              .orderBy('Data')
+                              .snapshots()
+                        : Stream.empty(),
                     builder: (context, snapshot) {
                       final now = DateTime.now();
                       final today = DateTime(now.year, now.month, now.day);

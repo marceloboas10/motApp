@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:motapp/app/model/reminder_model.dart';
@@ -91,23 +92,29 @@ class _ShowReminderComponentState extends State<ShowReminderComponent> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor:
-                                          LightColors.iconColorGreen,
-                                      content: Text(
-                                        'Lembrete ${reminder.reminder} excluído com sucesso!',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                  final userId =
+                                      FirebaseAuth.instance.currentUser?.uid;
+                                  if (userId != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor:
+                                            LightColors.iconColorGreen,
+                                        content: Text(
+                                          'Lembrete ${reminder.reminder} excluído com sucesso!',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                  FirebaseFirestore.instance
-                                      .collection('lembretes')
-                                      .doc(reminder.id)
-                                      .delete();
+                                    );
+                                    FirebaseFirestore.instance
+                                        .collection('usuarios')
+                                        .doc(userId)
+                                        .collection('lembretes')
+                                        .doc(reminder.id)
+                                        .delete();
+                                  }
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text(

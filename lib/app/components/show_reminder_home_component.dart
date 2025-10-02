@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:motapp/app/model/reminder_model.dart';
@@ -135,6 +136,9 @@ class _ShowReminderHomeComponentState extends State<ShowReminderHomeComponent>
                         ),
                         TextButton(
                           onPressed: () {
+                            final userId = FirebaseAuth.instance.currentUser?.uid;
+                            if (userId != null) {
+                              
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -146,10 +150,11 @@ class _ShowReminderHomeComponentState extends State<ShowReminderHomeComponent>
                                 ),
                               ),
                             );
-                            FirebaseFirestore.instance
+                            FirebaseFirestore.instance.collection('usuarios').doc(userId)
                                 .collection('lembretes')
                                 .doc(reminder.id)
                                 .delete();
+                            }
                             Navigator.of(context).pop();
                           },
                           child: const Text(

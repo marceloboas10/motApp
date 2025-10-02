@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motapp/app/core/shared/utils/mask_form_formatter.dart';
@@ -22,22 +23,29 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
   final _dateController = TextEditingController();
 
   void getDocumentById(String id) async {
-    await FirebaseFirestore.instance.collection('lembretes').doc(id).get().then(
-      (valor) {
-        reminder.text = valor.get('Lembrete');
-        description.text = valor.get('Descrição').toString();
-        final ts = valor.get('Data');
-        if (ts != null && ts is Timestamp) {
-          _selectedDate = ts.toDate();
-          _dateController.text = DateFormat(
-            'dd/MM/yyyy',
-          ).format(_selectedDate!);
-        } else {
-          _selectedDate = null;
-          _dateController.text = '';
-        }
-      },
-    );
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(userId)
+          .collection('lembretes')
+          .doc(id)
+          .get()
+          .then((valor) {
+            reminder.text = valor.get('Lembrete');
+            description.text = valor.get('Descrição').toString();
+            final ts = valor.get('Data');
+            if (ts != null && ts is Timestamp) {
+              _selectedDate = ts.toDate();
+              _dateController.text = DateFormat(
+                'dd/MM/yyyy',
+              ).format(_selectedDate!);
+            } else {
+              _selectedDate = null;
+              _dateController.text = '';
+            }
+          });
+    }
   }
 
   @override
@@ -120,11 +128,24 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
                 onPressed: () {
                   var formValid = _formKey.currentState?.validate() ?? false;
                   var mensagemSnack = 'Formulário Incompleto';
-                  var db = FirebaseFirestore.instance;
+                  final userId = FirebaseAuth.instance.currentUser?.uid;
+                  if (userId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: LightColors.buttonRed,
+                        content: Text('Usuário não autenticado.'),
+                      ),
+                    );
+                    return;
+                  }
+                  var db = FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .doc(userId)
+                      .collection('lembretes');
                   if (formValid) {
                     if (widget.id == null) {
                       //ADICIONA UM NOVO DOCUMENTO
-                      db.collection('lembretes').add({
+                      db.add({
                         'Lembrete': reminder.text,
                         'Descrição': description.text,
                         'Data': _selectedDate != null
@@ -133,16 +154,13 @@ class _FormReminderComponentState extends State<FormReminderComponent> {
                       });
                     } else {
                       //ATUALIZA DOCUMENTO
-                      db
-                          .collection('lembretes')
-                          .doc(widget.id.toString())
-                          .update({
-                            'Lembrete': reminder.text,
-                            'Descrição': description.text,
-                            'Data': _selectedDate != null
-                                ? Timestamp.fromDate(_selectedDate!)
-                                : null,
-                          });
+                      db.doc(widget.id.toString()).update({
+                        'Lembrete': reminder.text,
+                        'Descrição': description.text,
+                        'Data': _selectedDate != null
+                            ? Timestamp.fromDate(_selectedDate!)
+                            : null,
+                      });
                     }
                     Navigator.pop(context);
                   } else {

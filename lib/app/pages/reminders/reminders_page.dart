@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/components/app_bar_component.dart';
@@ -20,7 +21,11 @@ class _RemindersPageState extends State<RemindersPage> {
   @override
   void initState() {
     super.initState();
-    reminders = FirebaseFirestore.instance.collection('lembretes');
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+    reminders = FirebaseFirestore.instance.collection('usuarios').doc(userId).collection('lembretes');
+      
+    }
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text.trim().toLowerCase();
