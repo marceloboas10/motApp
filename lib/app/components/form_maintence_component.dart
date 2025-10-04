@@ -8,10 +8,14 @@ import 'package:motapp/app/theme/light/light_colors.dart';
 import 'package:motapp/app/widgets/form_field_widget.dart';
 
 class FormMaintenceComponent extends StatefulWidget {
-  const FormMaintenceComponent({super.key, this.vehicleId, this.productsUsed});
-
   final String? vehicleId;
   final List<Map<String, dynamic>>? productsUsed;
+
+  const FormMaintenceComponent({
+    super.key,
+    required this.vehicleId,
+    required this.productsUsed,
+  });
 
   @override
   State<FormMaintenceComponent> createState() => _FormMaintenceComponentState();
@@ -19,115 +23,169 @@ class FormMaintenceComponent extends StatefulWidget {
 
 class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController serviceName = TextEditingController();
-  final TextEditingController totalCoast = TextEditingController();
-  final TextEditingController date = TextEditingController();
-  final TextEditingController observation = TextEditingController();
+  final serviceDescriptionTxt = TextEditingController();
   final _dateController = TextEditingController();
+  DateTime? _selectedDate;
+
+  // Função para buscar os detalhes do veículo pelo ID
+  Future<DocumentSnapshot> _getVehicleDetails() {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('veiculos')
+        .doc(widget.vehicleId)
+        .get();
+  }
+
+  @override
+  void dispose() {
+    serviceDescriptionTxt.dispose();
+    _dateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(5),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              FormFieldWidget(
-                nameLabel: 'Nome do Serviço',
-                hintText: 'Ex: Troca de óleo e filtro',
-                nameField: serviceName,
-                inputFormatter: FilteringTextInputFormatter.singleLineFormatter,
-                message: 'Preencha o lembrete ',
-              ),
+        child: ListView(
+          children: [
+            // Seção para mostrar o veículo selecionado
+            Text('Veículo da Manutenção:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            FutureBuilder<DocumentSnapshot>(
+              future: _getVehicleDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('Carregando dados do veículo...',
+                      style: TextStyle(fontSize: 16));
+                }
+                if (!snapshot.hasData || snapshot.data?.data() == null) {
+                  return Text('Veículo não encontrado',
+                      style: TextStyle(fontSize: 16, color: Colors.red));
+                }
+                final vehicleData =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                return Text(
+                    '${vehicleData['Modelo']} - Placa: ${vehicleData['Placa']}',
+                    style: TextStyle(fontSize: 16));
+              },
+            ),
+            SizedBox(height: 20),
 
-              SizedBox(height: 12),
-              FormFieldWidget(
-                nameLabel: 'Data de Vencimento',
-                hintText: 'dd/ mm / aaaa',
-                nameField: _dateController,
-                onTap: () async {
-                  final picked = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2025),
-                    lastDate: DateTime(2100),
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      _dateController.text = DateFormat(
-                        'dd/MM/yyyy',
-                      ).format(picked);
-                    });
-                  }
-                },
-                inputFormatter: MaskFormFormatter().date,
-                message: 'Preencha o lembrete ',
-              ),
-              SizedBox(height: 12),
-              FormFieldWidget(
-                nameLabel: 'Observações',
-                nameField: observation,
-                maxLine: 3,
-                inputFormatter: FilteringTextInputFormatter.singleLineFormatter,
-                message: 'Preencha a descrição ',
-              ),
-              SizedBox(height: 12),
-              ElevatedButton(
-                style: ButtonStyle(
-                  shape: WidgetStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  backgroundColor: WidgetStatePropertyAll(
-                    LightColors.iconColorGreen,
+            // Seção para mostrar os produtos e quantidades
+            Text('Produtos Utilizados:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            if (widget.productsUsed != null && widget.productsUsed!.isNotEmpty)
+              ...widget.productsUsed!.map((product) {
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(product['Produto'],
+                      style: TextStyle(fontSize: 16)),
+                  trailing: Text('Quantidade: ${product['quantidade']}',
+                      style: TextStyle(fontSize: 16)),
+                );
+              }).toList()
+            else
+              Text('Nenhum produto selecionado.',
+                  style: TextStyle(fontSize: 16)),
+
+            Divider(height: 30),
+
+            // Campos para preenchimento do usuário
+            FormFieldWidget(
+              nameLabel: 'Descrição do Serviço',
+              nameField: serviceDescriptionTxt,
+              maxLine: 3,
+              inputFormatter: FilteringTextInputFormatter.singleLineFormatter,
+              message: 'Descreva o serviço realizado',
+            ),
+            SizedBox(height: 12),
+            FormFieldWidget(
+              nameLabel: 'Data da Manutenção',
+              hintText: 'dd/mm/aaaa',
+              nameField: _dateController,
+              onTap: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime.now(), // Não permite data futura
+                );
+                if (picked != null) {
+                  setState(() {
+                    _selectedDate = picked;
+                    _dateController.text =
+                        DateFormat('dd/MM/yyyy').format(picked);
+                  });
+                }
+              },
+              inputFormatter: MaskFormFormatter().date,
+              message: 'Informe a data da manutenção',
+            ),
+            SizedBox(height: 24),
+
+            ElevatedButton(
+              style: ButtonStyle(
+                fixedSize: WidgetStatePropertyAll(Size.fromHeight(50)),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {
-                  var formValid = _formKey.currentState?.validate() ?? false;
-                  var mensagemSnack = 'Formulário Incompleto';
+                backgroundColor: WidgetStatePropertyAll(
+                  LightColors.iconColorGreen,
+                ),
+              ),
+              onPressed: () {
+                var formValid = _formKey.currentState?.validate() ?? false;
+                if (formValid) {
                   final userId = FirebaseAuth.instance.currentUser?.uid;
-                  if (userId == null) {
-                    return;
-                  }
+                  if (userId == null) return;
 
                   var db = FirebaseFirestore.instance
                       .collection('usuarios')
                       .doc(userId)
                       .collection('manutencoes');
-                  if (formValid) {
-                    //ADICIONA UM NOVO DOCUMENTO
-                    db.add({
-                      'Serviço': serviceName.text,
-                      'Descrição': observation.text,
-                      'Data': date.text,
-                    });
-                    Navigator.pop(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: LightColors.buttonRed,
-                        content: Text(mensagemSnack),
-                      ),
-                    );
-                  }
-                },
-                child: Text(
-                  'SALVAR MANUTENÇÃO',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
+
+                  // Salva o novo documento de manutenção
+                  db.add({
+                    'servico': serviceDescriptionTxt.text,
+                    'data': _selectedDate != null
+                        ? Timestamp.fromDate(_selectedDate!)
+                        : Timestamp.now(),
+                    'vehicleId': widget.vehicleId,
+                    'produtosUsados': widget.productsUsed,
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: LightColors.iconColorGreen,
+                      content: Text('Manutenção salva com sucesso!'),
+                    ),
+                  );
+
+                  // Volta para a tela principal de manutenção
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                }
+              },
+              child: Text(
+                'SALVAR MANUTENÇÃO',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

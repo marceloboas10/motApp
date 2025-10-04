@@ -21,8 +21,8 @@ class _MaintencePageState extends State<MaintenancePage> {
 
   @override
   void dispose() {
+    searchController.dispose();
     super.dispose();
-    searchController;
   }
 
   @override
@@ -30,7 +30,8 @@ class _MaintencePageState extends State<MaintenancePage> {
     return Scaffold(
       appBar: AppBarComponent(
         title: 'Manutenção',
-        page: RegisterMaintencePage(),
+        page:
+            RegisterMaintencePage(), // Este botão pode ser removido se o fluxo for sempre pela página principal
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -40,8 +41,12 @@ class _MaintencePageState extends State<MaintenancePage> {
             children: [
               DropdownVehicleMaintenanceComponent(
                 vehicleSelected: vehicleSelected,
+                onChanged: (value) {
+                  setState(() {
+                    vehicleSelected = value;
+                  });
+                },
               ),
-
               SizedBox(height: 8),
               ProductUsedMaintenanceComponent(
                 searchController: searchController,
@@ -70,18 +75,21 @@ class _MaintencePageState extends State<MaintenancePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (productsSelected.isNotEmpty &&
-                        vehicleSelected != null &&
-                        vehicleSelected != '0') {
+                    final productsToSend = productsSelected
+                        .where((p) => (p['quantidade'] as int? ?? 0) > 0)
+                        .toList();
+
+                    if (vehicleSelected != null &&
+                        vehicleSelected != '0' &&
+                        productsToSend.isNotEmpty) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => RegisterMaintencePage(),
-                          // Passe os dados como argumentos
                           settings: RouteSettings(
                             arguments: {
                               'vehicleId': vehicleSelected,
-                              'products': productsSelected,
+                              'products': productsToSend,
                             },
                           ),
                         ),
@@ -91,21 +99,8 @@ class _MaintencePageState extends State<MaintenancePage> {
                         SnackBar(
                           backgroundColor: LightColors.buttonRed,
                           content: Text(
-                            'Selecione um veículo e ao menos um produto.',
+                            'Selecione um veículo e defina a quantidade de ao menos um produto.',
                           ),
-                        ),
-                      );
-                    }
-
-                    setState(() {
-                      vehicleSelected;
-                    });
-                    if (productsSelected.isNotEmpty &&
-                        vehicleSelected != 'Nenhum') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterMaintencePage(),
                         ),
                       );
                     }

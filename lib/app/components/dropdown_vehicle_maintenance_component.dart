@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
 class DropdownVehicleMaintenanceComponent extends StatefulWidget {
-  DropdownVehicleMaintenanceComponent({super.key, this.vehicleSelected});
-
+  DropdownVehicleMaintenanceComponent({
+    super.key,
+    required this.vehicleSelected,
+    required this.onChanged,
+  });
   String? vehicleSelected;
+  final ValueChanged<String?> onChanged;
 
   @override
   State<DropdownVehicleMaintenanceComponent> createState() =>
@@ -18,6 +22,7 @@ class _DropdownVehicleMaintenceComponentState
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,27 +32,29 @@ class _DropdownVehicleMaintenceComponentState
         ),
         SizedBox(height: 6),
         StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('usuarios')
-              .doc(userId)
-              .collection('veiculos')
-              .orderBy('Placa')
-              .snapshots(),
+          stream: userId != null
+              ? FirebaseFirestore.instance
+                    .collection('usuarios')
+                    .doc(userId)
+                    .collection('veiculos')
+                    .orderBy('Placa')
+                    .snapshots()
+              : Stream.empty(),
           builder: (context, snapshotProduct) {
             if (!snapshotProduct.hasData) {
               return Center(child: CircularProgressIndicator());
             }
 
-            List<DropdownMenuItem> vehicles = [];
+            List<DropdownMenuItem> vehiclesItems = [];
 
-            vehicles.add(
+            vehiclesItems.add(
               const DropdownMenuItem(value: null, child: Text('Nenhum')),
             );
 
             for (var doc in snapshotProduct.data!.docs) {
               final data = doc.data() as Map<String, dynamic>;
               final plate = data['Placa'];
-              vehicles.add(
+              vehiclesItems.add(
                 DropdownMenuItem<String>(value: doc.id, child: Text(plate)),
               );
             }
@@ -67,7 +74,7 @@ class _DropdownVehicleMaintenceComponentState
                 ),
               ),
               dropdownColor: Colors.white,
-              items: vehicles,
+              items: vehiclesItems,
               initialValue: widget.vehicleSelected,
               onChanged: (value) {
                 setState(() {
