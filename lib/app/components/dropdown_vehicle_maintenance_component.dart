@@ -3,22 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motapp/app/theme/light/light_colors.dart';
 
-class DropdownVehicleMaintenanceComponent extends StatefulWidget {
-  DropdownVehicleMaintenanceComponent({
+// Faça este componente ser um StatelessWidget, pois ele não precisa gerenciar estado.
+class DropdownVehicleMaintenanceComponent extends StatelessWidget {
+  final String? vehicleSelected;
+  final ValueChanged<String?> onChanged;
+
+  const DropdownVehicleMaintenanceComponent({
     super.key,
     required this.vehicleSelected,
     required this.onChanged,
   });
-  String? vehicleSelected;
-  final ValueChanged<String?> onChanged;
 
-  @override
-  State<DropdownVehicleMaintenanceComponent> createState() =>
-      _DropdownVehicleMaintenceComponentState();
-}
-
-class _DropdownVehicleMaintenceComponentState
-    extends State<DropdownVehicleMaintenanceComponent> {
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -45,10 +40,10 @@ class _DropdownVehicleMaintenceComponentState
               return Center(child: CircularProgressIndicator());
             }
 
-            List<DropdownMenuItem> vehiclesItems = [];
+            List<DropdownMenuItem<String>> vehiclesItems = [];
 
             vehiclesItems.add(
-              const DropdownMenuItem(value: null, child: Text('Nenhum')),
+              const DropdownMenuItem(value: '0', child: Text('Nenhum')),
             );
 
             for (var doc in snapshotProduct.data!.docs) {
@@ -59,7 +54,7 @@ class _DropdownVehicleMaintenceComponentState
               );
             }
 
-            return DropdownButtonFormField<dynamic>(
+            return DropdownButtonFormField<String>(
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -74,13 +69,11 @@ class _DropdownVehicleMaintenceComponentState
                 ),
               ),
               dropdownColor: Colors.white,
+              // O valor exibido agora é controlado pela tela pai (MaintenancePage)
+              initialValue: vehicleSelected,
               items: vehiclesItems,
-              initialValue: widget.vehicleSelected,
-              onChanged: (value) {
-                setState(() {
-                  widget.vehicleSelected = value;
-                });
-              },
+              // Ao mudar a seleção, a função `onChanged` é chamada para notificar a tela pai
+              onChanged: onChanged,
             );
           },
         ),

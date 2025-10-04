@@ -15,7 +15,8 @@ class MaintenancePage extends StatefulWidget {
 }
 
 class _MaintencePageState extends State<MaintenancePage> {
-  String? vehicleSelected;
+  // O estado do veículo selecionado é controlado aqui
+  String? vehicleSelected = '0'; // Começa com 'Nenhum'
   TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> productsSelected = [];
 
@@ -30,8 +31,7 @@ class _MaintencePageState extends State<MaintenancePage> {
     return Scaffold(
       appBar: AppBarComponent(
         title: 'Manutenção',
-        page:
-            RegisterMaintencePage(), // Este botão pode ser removido se o fluxo for sempre pela página principal
+        page: RegisterMaintencePage(),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -39,11 +39,12 @@ class _MaintencePageState extends State<MaintenancePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Passamos o valor atual e a função para atualizar o estado
               DropdownVehicleMaintenanceComponent(
                 vehicleSelected: vehicleSelected,
-                onChanged: (value) {
+                onChanged: (newValue) {
                   setState(() {
-                    vehicleSelected = value;
+                    vehicleSelected = newValue;
                   });
                 },
               ),
@@ -79,6 +80,7 @@ class _MaintencePageState extends State<MaintenancePage> {
                         .where((p) => (p['quantidade'] as int? ?? 0) > 0)
                         .toList();
 
+                    // Agora a validação vai funcionar, pois vehicleSelected mantém o valor
                     if (vehicleSelected != null &&
                         vehicleSelected != '0' &&
                         productsToSend.isNotEmpty) {
