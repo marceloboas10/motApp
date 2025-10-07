@@ -27,7 +27,6 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
   final _dateController = TextEditingController();
   DateTime? _selectedDate;
 
-  // Função para buscar os detalhes do veículo pelo ID
   Future<DocumentSnapshot> _getVehicleDetails() {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     return FirebaseFirestore.instance
@@ -45,6 +44,24 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
     super.dispose();
   }
 
+  Future<void> _updateProductStock(String userId) async {
+    if (widget.productsUsed == null) return;
+
+    final productsRef = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('produtos');
+
+    for (var product in widget.productsUsed!) {
+      final productId = product['id'] as String;
+      final quantityUsed = product['quantidade'] as int;
+
+      await productsRef.doc(productId).update({
+        'Quantidade': FieldValue.increment(-quantityUsed),
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -55,51 +72,61 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
         height: MediaQuery.of(context).size.height,
         child: ListView(
           children: [
-            // Seção para mostrar o veículo selecionado
-            Text('Veículo da Manutenção:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              'Veículo da Manutenção:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 8),
             FutureBuilder<DocumentSnapshot>(
               future: _getVehicleDetails(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('Carregando dados do veículo...',
-                      style: TextStyle(fontSize: 16));
+                  return Text(
+                    'Carregando dados do veículo...',
+                    style: TextStyle(fontSize: 16),
+                  );
                 }
                 if (!snapshot.hasData || snapshot.data?.data() == null) {
-                  return Text('Veículo não encontrado',
-                      style: TextStyle(fontSize: 16, color: Colors.red));
+                  return Text(
+                    'Veículo não encontrado',
+                    style: TextStyle(fontSize: 16, color: Colors.red),
+                  );
                 }
                 final vehicleData =
                     snapshot.data!.data() as Map<String, dynamic>;
                 return Text(
-                    '${vehicleData['Modelo']} - Placa: ${vehicleData['Placa']}',
-                    style: TextStyle(fontSize: 16));
+                  '${vehicleData['Modelo']} - Placa: ${vehicleData['Placa']}',
+                  style: TextStyle(fontSize: 16),
+                );
               },
             ),
             SizedBox(height: 20),
-
-            // Seção para mostrar os produtos e quantidades
-            Text('Produtos Utilizados:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              'Produtos Utilizados:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 8),
             if (widget.productsUsed != null && widget.productsUsed!.isNotEmpty)
               ...widget.productsUsed!.map((product) {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: Text(product['Produto'],
-                      style: TextStyle(fontSize: 16)),
-                  trailing: Text('Quantidade: ${product['quantidade']}',
-                      style: TextStyle(fontSize: 16)),
+                  title: Text(
+                    product['Produto'],
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  trailing: Text(
+                    'Quantidade: ${product['quantidade']}',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 );
-              }).toList()
+              })
             else
-              Text('Nenhum produto selecionado.',
-                  style: TextStyle(fontSize: 16)),
+              Text(
+                'Nenhum produto selecionado.',
+                style: TextStyle(fontSize: 16),
+              ),
 
             Divider(height: 30),
-
-            // Campos para preenchimento do usuário
             FormFieldWidget(
               nameLabel: 'Descrição do Serviço',
               nameField: serviceDescriptionTxt,
@@ -117,13 +144,14 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(2020),
-                  lastDate: DateTime.now(), // Não permite data futura
+                  lastDate: DateTime.now(),
                 );
                 if (picked != null) {
                   setState(() {
                     _selectedDate = picked;
-                    _dateController.text =
-                        DateFormat('dd/MM/yyyy').format(picked);
+                    _dateController.text = DateFormat(
+                      'dd/MM/yyyy',
+                    ).format(picked);
                   });
                 }
               },
@@ -144,7 +172,7 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
                   LightColors.iconColorGreen,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 var formValid = _formKey.currentState?.validate() ?? false;
                 if (formValid) {
                   final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -155,7 +183,6 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
                       .doc(userId)
                       .collection('manutencoes');
 
-                  // Salva o novo documento de manutenção
                   db.add({
                     'servico': serviceDescriptionTxt.text,
                     'data': _selectedDate != null
@@ -165,6 +192,10 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
                     'produtosUsados': widget.productsUsed,
                   });
 
+                  await _updateProductStock(userId);
+
+                  if (!mounted) return;
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: LightColors.iconColorGreen,
@@ -172,9 +203,7 @@ class _FormMaintenceComponentState extends State<FormMaintenceComponent> {
                     ),
                   );
 
-                  // Volta para a tela principal de manutenção
-                  int count = 0;
-                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                  Navigator.of(context).pop(true);
                 }
               },
               child: Text(

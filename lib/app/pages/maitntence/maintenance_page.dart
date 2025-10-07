@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:motapp/app/components/app_bar_component.dart';
 import 'package:motapp/app/components/dropdown_vehicle_maintenance_component.dart';
 import 'package:motapp/app/components/maintenance_history_component.dart';
 import 'package:motapp/app/components/product_selected_maintenance_component.dart';
@@ -15,8 +14,8 @@ class MaintenancePage extends StatefulWidget {
 }
 
 class _MaintencePageState extends State<MaintenancePage> {
-  // O estado do veículo selecionado é controlado aqui
-  String? vehicleSelected = '0'; // Começa com 'Nenhum'
+  
+  String? vehicleSelected = '0'; 
   TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> productsSelected = [];
 
@@ -29,17 +28,13 @@ class _MaintencePageState extends State<MaintenancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(
-        title: 'Manutenção',
-        page: RegisterMaintencePage(),
-      ),
+      appBar: AppBar(centerTitle: true, title: Text('Manutenção')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Passamos o valor atual e a função para atualizar o estado
               DropdownVehicleMaintenanceComponent(
                 vehicleSelected: vehicleSelected,
                 onChanged: (newValue) {
@@ -75,16 +70,15 @@ class _MaintencePageState extends State<MaintenancePage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final productsToSend = productsSelected
                         .where((p) => (p['quantidade'] as int? ?? 0) > 0)
                         .toList();
 
-                    // Agora a validação vai funcionar, pois vehicleSelected mantém o valor
                     if (vehicleSelected != null &&
                         vehicleSelected != '0' &&
                         productsToSend.isNotEmpty) {
-                      Navigator.push(
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => RegisterMaintencePage(),
@@ -96,6 +90,14 @@ class _MaintencePageState extends State<MaintenancePage> {
                           ),
                         ),
                       );
+
+                      if (result == true && mounted) {
+                        setState(() {
+                          productsSelected.clear();
+                          vehicleSelected = '0';
+                          searchController.clear();
+                        });
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

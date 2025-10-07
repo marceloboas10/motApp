@@ -20,18 +20,20 @@ class _FormProductComponentState extends State<FormProductComponent> {
 
   void getDocumentById(String id) async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      await FirebaseFirestore.instance
-          .collection('usuarios')
-          .doc(userId)
-          .collection('produtos')
-          .doc(id)
-          .get()
-          .then((valor) {
+    if (userId == null) return;
+
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .collection('produtos')
+        .doc(id)
+        .get()
+        .then((valor) {
+          if (valor.exists) {
             product.text = valor.get('Produto');
             amount.text = valor.get('Quantidade').toString();
-          });
-    }
+          }
+        });
   }
 
   @override
@@ -94,18 +96,17 @@ class _FormProductComponentState extends State<FormProductComponent> {
                       .collection('usuarios')
                       .doc(userId)
                       .collection('produtos');
+                  final int quantityAsInt = int.tryParse(amount.text) ?? 0;
                   if (formValid) {
                     if (widget.id == null) {
-                      //ADICIONA UM NOVO DOCUMENTO
                       db.add({
                         'Produto': product.text,
-                        'Quantidade': amount.text,
+                        'Quantidade': quantityAsInt,
                       });
                     } else {
-                      //ATUALIZA DOCUMENTO
                       db.doc(widget.id.toString()).update({
                         'Produto': product.text,
-                        'Quantidade': amount.text,
+                        'Quantidade': quantityAsInt,
                       });
                     }
                     Navigator.pop(context);

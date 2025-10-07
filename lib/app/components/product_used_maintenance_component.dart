@@ -23,8 +23,7 @@ class _ProductUsedMaintenceComponentState
   String searchText = '';
   List<Map<String, dynamic>> productSelected = [];
 
-  void addProduct(String id, String nome, String estoque) {
-    // Verifica se o produto já foi adicionado
+  void addProduct(String id, String nome, int estoque) {
     bool alreadyAdded = productSelected.any((p) => p['id'] == id);
 
     if (alreadyAdded) {
@@ -41,7 +40,7 @@ class _ProductUsedMaintenceComponentState
       productSelected.add({
         'id': id,
         'Produto': nome,
-        'Quantidade': estoque.toString(),
+        'Quantidade': estoque,
         'quantidade': 0,
       });
     });
@@ -49,7 +48,6 @@ class _ProductUsedMaintenceComponentState
     widget.onProductsChanged(productSelected);
   }
 
-  // Método para remover produto
   void removeProduct(int index) {
     setState(() {
       productSelected.removeAt(index);
@@ -118,7 +116,7 @@ class _ProductUsedMaintenceComponentState
                   final doc = products[index];
                   final data = doc.data() as Map<String, dynamic>;
                   final productName = (data['Produto']);
-                  final productAmount = (data['Quantidade']);
+                  final productAmount = (data['Quantidade'] as num).toInt();
 
                   return Card(
                     child: ListTile(
