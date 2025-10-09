@@ -91,6 +91,7 @@ class _ProductUsedMaintenceComponentState
                       .collection('usuarios')
                       .doc(userId)
                       .collection('produtos')
+                      .where('Quantidade', isGreaterThan: 0)
                       .snapshots()
                 : Stream.empty(),
             builder: (context, snapshot) {
@@ -107,7 +108,7 @@ class _ProductUsedMaintenceComponentState
               }).toList();
 
               if (products.isEmpty) {
-                return Center(child: Text('Nenhum produto encontrado'));
+                return Center(child: Text('Nenhum produto cadastrado'));
               }
 
               return ListView.builder(

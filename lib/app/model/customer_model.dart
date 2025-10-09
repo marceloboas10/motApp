@@ -14,6 +14,7 @@ class CustomerModel {
   late String cidade;
   late String motoAlugada;
   late bool? pagamentoPendente;
+  late String? profileImageUrl;
 
   CustomerModel(
     this.id,
@@ -31,24 +32,24 @@ class CustomerModel {
     this.cidade,
     this.motoAlugada,
     this.pagamentoPendente,
+    this.profileImageUrl
   );
 
-  CustomerModel.fromJson(Map<String, dynamic> map, this.id) 
-   : nome = map['Nome'],
-    rg = map['RG'],
-    cpf = map['CPF'],
-    celular = map['Celular'],
-    celular2 = map['Celular_2'],
-    validadeCnh = map['Validade_CNH'],
-    cep = map['CEP'],
-    endereco = map['Endereço'],
-    numeroResidencia = map['Numero_Residencia'],
-    complemento = map['Complemento'],
-    bairro = map['Bairro'],
-    cidade = map['Cidade'],
-    motoAlugada = map['Moto_Alugada'],
-    pagamentoPendente = map['Pagamento_Pendente'];
-  
+  CustomerModel.fromJson(Map<String, dynamic> map, this.id)
+    : nome = map['Nome'],
+      rg = map['RG'],
+      cpf = map['CPF'],
+      celular = map['Celular'],
+      celular2 = map['Celular_2'],
+      validadeCnh = map['Validade_CNH'],
+      cep = map['CEP'],
+      endereco = map['Endereço'],
+      numeroResidencia = map['Numero_Residencia'],
+      complemento = map['Complemento'],
+      bairro = map['Bairro'],
+      cidade = map['Cidade'],
+      motoAlugada = map['Moto_Alugada'],
+      pagamentoPendente = map['Pagamento_Pendente'], profileImageUrl = map['profileImageUrl'];
 
   Map<String, dynamic> toJson() {
     return {

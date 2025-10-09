@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +11,9 @@ class ShowCustomerCompoment extends StatefulWidget {
     super.key,
     required this.snapshot,
     required this.function,
-    required this.fileImage,
   });
   final dynamic snapshot;
   final VoidCallback function;
-  final File? fileImage;
 
   @override
   State<ShowCustomerCompoment> createState() => _ShowCustomerCompomentState();
@@ -29,6 +26,12 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
       widget.snapshot.data(),
       widget.snapshot.id,
     );
+
+    final imageProvider = customer.profileImageUrl != null
+        ? NetworkImage(customer.profileImageUrl!)
+        : NetworkImage(
+            'https://i.pinimg.com/474x/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg',
+          );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -44,11 +47,7 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.grey[300],
-                      backgroundImage: widget.fileImage == null
-                          ? NetworkImage(
-                              'https://i.pinimg.com/474x/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg',
-                            )
-                          : FileImage(widget.fileImage!),
+                      backgroundImage: imageProvider as ImageProvider,
                     ),
                     Positioned(
                       top: 27,
@@ -58,6 +57,7 @@ class _ShowCustomerCompomentState extends State<ShowCustomerCompoment> {
                         icon: Icon(
                           Icons.camera_alt_rounded,
                           color: Colors.black,
+                          size: 20,
                         ),
                       ),
                     ),

@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,17 +20,45 @@ class _CustomersPageState extends State<CustomersPage> {
   late CollectionReference customers;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
-
   final imagePicker = ImagePicker();
-  File? imageFile;
 
-  pick(ImageSource source) async {
-    final pickedFile = await imagePicker.pickImage(source: source);
+  Future<void> _uploadProfileImage(String customerId, File imageFile) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child(userId)
+          .child('$customerId.jpg');
+
+      await storageRef.putFile(imageFile);
+      final imageUrl = await storageRef.getDownloadURL();
+      await customers.doc(customerId).update({'profileImageUrl': imageUrl});
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Foto de perfil atualizada!')));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erro ao salvar a foto: $e')));
+      }
+    }
+  }
+
+  Future<void> pick(ImageSource source, String customerId) async {
+    final pickedFile = await imagePicker.pickImage(
+      source: source,
+      imageQuality: 50,
+    );
 
     if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-      });
+      await _uploadProfileImage(customerId, File(pickedFile.path));
     }
   }
 
@@ -58,7 +86,7 @@ class _CustomersPageState extends State<CustomersPage> {
     super.dispose();
   }
 
-  void _showOptionBottomSheet() {
+  void _showOptionBottomSheet(String customerId) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -78,7 +106,7 @@ class _CustomersPageState extends State<CustomersPage> {
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
-                  pick(ImageSource.gallery);
+                  pick(ImageSource.gallery, customerId);
                 },
               ),
               ListTile(
@@ -93,25 +121,25 @@ class _CustomersPageState extends State<CustomersPage> {
                 onTap: () {
                   Navigator.of(context).pop();
 
-                  pick(ImageSource.camera);
+                  pick(ImageSource.camera, customerId);
                 },
               ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.grey[200],
-                  child: Icon(Icons.delete, color: Colors.grey[500]),
-                ),
-                title: Text(
-                  'Remover',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    imageFile = null;
-                  });
-                },
-              ),
+              // ListTile(
+              //   leading: CircleAvatar(
+              //     backgroundColor: Colors.grey[200],
+              //     child: Icon(Icons.delete, color: Colors.grey[500]),
+              //   ),
+              //   title: Text(
+              //     'Remover',
+              //     style: Theme.of(context).textTheme.bodyLarge,
+              //   ),
+              //   onTap: () {
+              //     Navigator.of(context).pop();
+              //     setState(() {
+              //       imageFile = null;
+              //     });
+              //   },
+              // ),
             ],
           ),
         );
@@ -158,13 +186,13 @@ class _CustomersPageState extends State<CustomersPage> {
                                 .toLowerCase();
                             return nome.contains(_searchText);
                           }).toList();
+
                     return ListView.builder(
                       itemCount: filteredDocs.length,
-                      itemBuilder: (context, index) => ShowCustomerCompoment(
-                        snapshot: filteredDocs[index],
-                        function: _showOptionBottomSheet,
-                        fileImage: imageFile,
-                      ),
+                      itemBuilder: (context, index) {
+                        final customerDoc = filteredDocs[index];
+                        return ShowCustomerCompoment(snapshot: customerDoc, function: ()=> _showOptionBottomSheet(customerDoc.id));
+                      }
                     );
                 }
               },
